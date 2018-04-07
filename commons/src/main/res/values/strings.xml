@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Commons</string>
-    <string name="no_camera_on_device">No camera on device</string>
-    <string name="select_image">Select image</string>
-    <string name="waiting">Waiting...</string>
-</resources>

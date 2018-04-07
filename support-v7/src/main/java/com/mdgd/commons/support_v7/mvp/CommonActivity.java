@@ -1,23 +1,23 @@
-package com.mdgd.commons.mvp;
+package com.mdgd.commons.support_v7.mvp;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Process;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.mdgd.commons.R;
+import com.mdgd.commons.support_v7.R;
 
 /**
  * Created by Dan
  * on 01/01/2018.
  */
 
-public abstract class CommonActivity<T extends ViewContract.IPresenter> extends Activity
+public abstract class CommonActivity<T extends ViewContract.IPresenter> extends AppCompatActivity
         implements ViewContract.IView {
     private boolean onForeground = false;
     protected T presenter;
@@ -57,7 +57,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         }
     }
 
-    protected Dialog createProgressView(String title, String message) {
+    private Dialog createProgressView(String title, String message) {
         return ProgressDialog.show(this, title, message, true);
     }
 

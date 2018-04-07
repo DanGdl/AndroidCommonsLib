@@ -1,8 +1,6 @@
-package com.mdgd.commons.capture;
+package com.mdgd.commons.support_v7.capture;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,9 +11,10 @@ import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.mdgd.commons.R;
+import com.mdgd.commons.support_v7.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -26,16 +25,15 @@ import java.io.FileOutputStream;
  * on 21/02/2018.
  */
 
-@TargetApi(23)
 public abstract class TakePictureDelegate {
 
     private final int PERMISSIONS_REQUEST_SELECT;
     private final int REQUEST_IMAGE_CAPTURE;
     private final int PERMISSIONS_REQUEST_CAPTURE;
     private final int REQUEST_SELECT_PICTURE;
-    private final Activity context;
+    private final AppCompatActivity context;
 
-    protected TakePictureDelegate(Activity context, int permissionRequestCodeCapture, int imageCaptureRequestCode,
+    protected TakePictureDelegate(AppCompatActivity context, int permissionRequestCodeCapture, int imageCaptureRequestCode,
                                   int permissionRequestCodeSelect, int imageSelectRequestCode) {
         this.context = context;
 
@@ -47,9 +45,9 @@ public abstract class TakePictureDelegate {
     }
 
     public void makePicture() {
-        if (context.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                context.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                context.checkPermission(Manifest.permission.CAMERA, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+        if (context.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
+                context.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
+                context.checkPermission(Manifest.permission.CAMERA, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(context,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
@@ -70,7 +68,7 @@ public abstract class TakePictureDelegate {
     }
 
     public void selectFromGallery() {
-        if (context.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+        if (context.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SELECT);
             return;
         }
@@ -111,10 +109,10 @@ public abstract class TakePictureDelegate {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
             fetchNewImage(data);
         }
-        else if (requestCode == REQUEST_SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == REQUEST_SELECT_PICTURE && resultCode == AppCompatActivity.RESULT_OK) {
             if (data != null && data.getData() != null) {
                 updateImage(data.getData());
             }

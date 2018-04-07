@@ -1,18 +1,20 @@
-package com.mdgd.commons.mvp;
+package com.mdgd.commons.support_v7.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import com.mdgd.commons.R;
+import com.mdgd.commons.support_v7.R;
+import com.mdgd.commons.support_v7.mvp.CommonActivity;
+import com.mdgd.commons.support_v7.mvp.ViewContract;
 
 /**
  * Created by Dan
  * on 25/07/2017.
  */
 
-public abstract class HostActivity<T extends ViewContract.IPresenter> extends CommonActivity<T> {
+public abstract class HostActivity<T extends ViewContract.IPresenter> extends CommonActivity<T> implements  FragmentContract.IHost {
 
     protected View container;
 

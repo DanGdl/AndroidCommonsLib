@@ -13,7 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.mdgd.commons.R;
-import com.mdgd.commons.contarct.mvp.ViewContract;
+import com.mdgd.commons.contract.mvp.ViewContract;
 
 /**
  * Created by Dan

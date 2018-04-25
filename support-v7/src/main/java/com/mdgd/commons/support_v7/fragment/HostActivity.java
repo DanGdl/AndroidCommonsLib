@@ -4,9 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.mdgd.commons.contract.fragment.FragmentContract;
+import com.mdgd.commons.contract.mvp.ViewContract;
 import com.mdgd.commons.support_v7.R;
 import com.mdgd.commons.support_v7.mvp.CommonActivity;
-import com.mdgd.commons.support_v7.mvp.ViewContract;
 
 import java.util.List;
 

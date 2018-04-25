@@ -1,10 +1,10 @@
-package com.mdgd.commons.support_v7.recycler.fragment;
+package com.mdgd.commons.support_v7.fragment;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
+import com.mdgd.commons.contract.fragment.FragmentContract;
 import com.mdgd.commons.support_v7.R;
-import com.mdgd.commons.support_v7.fragment.FragmentContract;
 
 /**
  * Created by Dan

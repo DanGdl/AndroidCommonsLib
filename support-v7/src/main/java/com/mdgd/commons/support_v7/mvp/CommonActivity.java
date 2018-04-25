@@ -12,7 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.mdgd.commons.contarct.mvp.ViewContract;
+import com.mdgd.commons.contract.mvp.ViewContract;
 import com.mdgd.commons.support_v7.R;
 
 /**

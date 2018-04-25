@@ -1,6 +1,6 @@
 package com.mdgd.commons.mvp;
 
-import com.mdgd.commons.contarct.mvp.ViewContract;
+import com.mdgd.commons.contract.mvp.ViewContract;
 
 /**
  * Created by Dan

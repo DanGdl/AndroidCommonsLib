@@ -1,7 +1,6 @@
 package com.mdgd.commons.capture;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,7 +23,6 @@ import java.io.FileOutputStream;
  * on 21/02/2018.
  */
 
-@TargetApi(23)
 public abstract class TakePictureDelegate {
 
     private final int PERMISSIONS_REQUEST_SELECT;

@@ -3,6 +3,8 @@ package com.mdgd.commons.mvp;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -123,5 +125,23 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     @Override
     public void showToast(int msgRes, String query){
         Toast.makeText(this, getString(msgRes, query), Toast.LENGTH_SHORT).show();
+    }
+
+    protected void setFragment(Fragment fragment) {
+        setFragment(fragment, false, null);
+    }
+
+    protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
+        if(addToStack){
+            transaction.addToBackStack(backStackTag);
+        }
+        transaction.commit();
+    }
+
+    protected abstract int getFragmentContainerId();
+
+    protected void setFragmentToBackStack(Fragment fragment) {
+        setFragment(fragment, true, null);
     }
 }

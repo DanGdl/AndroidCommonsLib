@@ -8,6 +8,8 @@ public class FragmentContract {
         void hideProgress();
 
         void finish();
+
+        void onBackPressed();
     }
 
     public interface IFragment {

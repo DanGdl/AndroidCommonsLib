@@ -9,6 +9,8 @@ import com.mdgd.commons.R;
 import com.mdgd.commons.mvp.CommonActivity;
 import com.mdgd.commons.mvp.ViewContract;
 
+import java.util.List;
+
 /**
  * Created by Dan
  * on 25/07/2017.
@@ -25,33 +27,36 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
         if(presenter == null) {
             presenter = createPresenter();
         }
-        container = findViewById(R.id.fragmentContainer);
+        container = findViewById(getFragmentContainerId());
         if(savedInstanceState == null) {
             setFragment(getFirstFragment());
         }
+        else {
+            List<Fragment> fragments = getFragmentManager().getFragments();
+            if(fragments == null || fragments.isEmpty()){
+                setFragment(getFirstFragment());
+            }
+            else {
+                restoreFragments(fragments);
+            }
+        }
     }
+
+    protected abstract void restoreFragments(List<Fragment> fragments);
 
     protected abstract T createPresenter();
 
+    @Override
     protected int getLayoutResId(){
         return R.layout.activity_fragment;
     }
 
-    protected void setFragment(Fragment fragment) {
-        setFragment(fragment, false, null);
+    @Override
+    protected int getFragmentContainerId() {
+        return R.id.fragmentContainer;
     }
 
-    protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment);
-        if(addToStack){
-            transaction.addToBackStack(backStackTag);
-        }
-        transaction.commit();
-    }
 
-    protected void setFragmentToBackStack(Fragment fragment) {
-        setFragment(fragment, true, null);
-    }
 
     protected abstract Fragment getFirstFragment();
 }

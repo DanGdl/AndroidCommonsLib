@@ -1,1 +1,1 @@
-include ':app', ':commons', ':support-v7', ':resources', ':recycler', ':contract'
+include ':app', ':commons', ':support-v7', ':resources', ':recycler', ':contract', ':capture'

@@ -1,5 +1,7 @@
 package com.mdgd.commons.support_v7.mvp;
 
+import com.mdgd.commons.contarct.mvp.ViewContract;
+
 /**
  * Created by Dan
  * on 08/10/2017.

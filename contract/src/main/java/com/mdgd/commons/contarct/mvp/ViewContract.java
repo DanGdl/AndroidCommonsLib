@@ -1,4 +1,4 @@
-package com.mdgd.commons.mvp;
+package com.mdgd.commons.contarct.mvp;
 
 public class ViewContract {
 

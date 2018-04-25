@@ -3,8 +3,9 @@ package com.mdgd.commons.support_v7.recycler.fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.mdgd.commons.contarct.fragment.FragmentContract;
+import com.mdgd.commons.recycler.CommonRecyclerAdapter;
 import com.mdgd.commons.support_v7.R;
-import com.mdgd.commons.support_v7.fragment.FragmentContract;
 import com.mdgd.commons.support_v7.fragment.HostedFragment;
 
 /**

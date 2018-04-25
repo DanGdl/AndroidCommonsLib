@@ -1,4 +1,4 @@
-package com.mdgd.commons.support_v7.fragment;
+package com.mdgd.commons.contarct.fragment;
 
 public class FragmentContract {
 

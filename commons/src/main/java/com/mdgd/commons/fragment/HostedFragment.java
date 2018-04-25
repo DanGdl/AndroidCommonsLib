@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mdgd.commons.contarct.fragment.FragmentContract;
+
 /**
  * Created by Dan
  * on 19/07/2017.

@@ -2,7 +2,6 @@ package com.mdgd.commons.support_v7.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.mdgd.commons.support_v7.R;

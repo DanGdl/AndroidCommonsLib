@@ -56,7 +56,5 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
         return R.id.fragmentContainer;
     }
 
-
-
     protected abstract Fragment getFirstFragment();
 }

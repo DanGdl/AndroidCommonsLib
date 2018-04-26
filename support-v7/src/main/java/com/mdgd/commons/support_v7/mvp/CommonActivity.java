@@ -12,8 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.mdgd.commons.R;
 import com.mdgd.commons.contract.mvp.ViewContract;
-import com.mdgd.commons.support_v7.R;
 
 /**
  * Created by Dan
@@ -29,15 +29,72 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResId());
         if(presenter == null) {
-            presenter = createPresenter();
+            setupPresenter();
         }
+        setContentView(getLayoutResId());
     }
 
-    protected abstract T createPresenter();
+    protected abstract void setupPresenter();
 
     protected abstract int getLayoutResId();
+
+    @Override
+    protected void onStop() {
+        hideProgress();
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onForeground = true;
+    }
+
+    @Override
+    protected void onPause(){
+        onForeground = false;
+        super.onPause();
+    }
+
+    @Override
+    public void setPresenter(ViewContract.IPresenter presenter) {
+        this.presenter = (T)presenter;
+    }
+
+
+
+
+    @TargetApi(16)
+    protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
+        boolean result = false;
+        for(String p : permissions){
+            if(checkPermission(p, android.os.Process.myPid(), Process.myUid()) == PackageManager.PERMISSION_GRANTED){
+                result = true;
+            }
+            else{
+                askPermissions(requestCode, permissions);
+            }
+        }
+        return result;
+    }
+
+    private void askPermissions(int requestCode, String[] permissions) {
+        ActivityCompat.requestPermissions(this, permissions, requestCode);
+    }
+
+    protected boolean areAllPermissionsGranted(int[] grantResults) {
+        boolean result = false;
+        for (int i : grantResults) {
+            if (i == PackageManager.PERMISSION_GRANTED) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+
+
 
     @Override
     public void showProgress(){
@@ -73,52 +130,6 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     @Override
-    protected void onStop() {
-        hideProgress();
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        onForeground = true;
-    }
-
-    @Override
-    protected void onPause(){
-        onForeground = false;
-        super.onPause();
-    }
-
-    @TargetApi(16)
-    protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
-        boolean result = false;
-        for(String p : permissions){
-            if(checkPermission(p, android.os.Process.myPid(), Process.myUid()) == PackageManager.PERMISSION_GRANTED){
-                result = true;
-            }
-            else{
-                askPermissions(requestCode, permissions);
-            }
-        }
-        return result;
-    }
-
-    private void askPermissions(int requestCode, String[] permissions) {
-        ActivityCompat.requestPermissions(this, permissions, requestCode);
-    }
-
-    protected boolean areAllPermissionsGranted(int[] grantResults) {
-        boolean result = false;
-        for (int i : grantResults) {
-            if (i == PackageManager.PERMISSION_GRANTED) {
-                result = true;
-            }
-        }
-        return result;
-    }
-
-    @Override
     public void showToast(int msgRes){
         Toast.makeText(this, msgRes, Toast.LENGTH_SHORT).show();
     }
@@ -127,6 +138,9 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     public void showToast(int msgRes, String query){
         Toast.makeText(this, getString(msgRes, query), Toast.LENGTH_SHORT).show();
     }
+
+
+
 
     protected void setFragment(Fragment fragment) {
         setFragment(fragment, false, null);
@@ -140,9 +154,9 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         transaction.commit();
     }
 
-    protected abstract int getFragmentContainerId();
-
     protected void setFragmentToBackStack(Fragment fragment) {
         setFragment(fragment, true, null);
     }
+
+    protected abstract int getFragmentContainerId();
 }

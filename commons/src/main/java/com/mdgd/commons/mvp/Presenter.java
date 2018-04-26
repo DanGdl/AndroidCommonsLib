@@ -13,4 +13,7 @@ public abstract class Presenter<T extends ViewContract.IView> implements ViewCon
     public Presenter(T view){
         this.view = view;
     }
+
+    @Override
+    public void onDestroy(){}
 }

@@ -2,10 +2,8 @@ package com.mdgd.commons.mvp;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Process;
@@ -14,6 +12,8 @@ import android.widget.Toast;
 
 import com.mdgd.commons.R;
 import com.mdgd.commons.contract.mvp.ViewContract;
+import com.mdgd.commons.contract.progress.IProgressView;
+import com.mdgd.commons.contract.progress.ProgressDialogWrapper;
 
 /**
  * Created by Dan
@@ -24,7 +24,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         implements ViewContract.IView {
     private boolean onForeground = false;
     protected T presenter;
-    private Dialog progress;
+    private IProgressView progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +115,8 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         }
     }
 
-    protected Dialog createProgressView(String title, String message) {
-        return ProgressDialog.show(this, title, message, true);
+    protected IProgressView createProgressView(String title, String message) {
+        return new ProgressDialogWrapper(this, title, message);
     }
 
     @Override

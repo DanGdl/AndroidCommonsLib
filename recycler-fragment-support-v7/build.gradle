@@ -28,7 +28,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':contract')
     implementation project(':recycler')
-    implementation project(':support-v7')
+    implementation project(':commons-support-v7')
     implementation project(':resources')
 
     implementation 'com.android.support:recyclerview-v7:27.1.1'

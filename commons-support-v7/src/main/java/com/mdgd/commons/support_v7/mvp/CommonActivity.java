@@ -158,5 +158,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         setFragment(fragment, true, null);
     }
 
-    protected abstract int getFragmentContainerId();
+    protected int getFragmentContainerId(){
+        return R.id.fragmentContainer;
+    }
 }

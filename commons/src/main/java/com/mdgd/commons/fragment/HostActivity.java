@@ -40,16 +40,11 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
         }
     }
 
-    protected abstract void restoreFragments(List<Fragment> fragments);
+    protected void restoreFragments(List<Fragment> fragments){};
 
     @Override
     protected int getLayoutResId(){
         return R.layout.activity_fragment;
-    }
-
-    @Override
-    protected int getFragmentContainerId() {
-        return R.id.fragmentContainer;
     }
 
     protected abstract Fragment getFirstFragment();

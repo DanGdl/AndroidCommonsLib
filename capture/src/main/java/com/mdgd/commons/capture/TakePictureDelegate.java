@@ -31,12 +31,15 @@ public abstract class TakePictureDelegate {
     private final int REQUEST_IMAGE_CAPTURE;
     private final int PERMISSIONS_REQUEST_CAPTURE;
     private final int REQUEST_SELECT_PICTURE;
-    private final Activity context;
+    private final Activity CONTEXT;
+    private final String IMAGE_PATH;
+    private final ImageFormats IMAGE_FORMAT;
 
-    protected TakePictureDelegate(Activity context, int permissionRequestCodeCapture, int imageCaptureRequestCode,
-                                  int permissionRequestCodeSelect, int imageSelectRequestCode) {
-        this.context = context;
-
+    protected TakePictureDelegate(Activity context, String imagePath, ImageFormats imageFormat, int permissionRequestCodeCapture,
+                                  int imageCaptureRequestCode, int permissionRequestCodeSelect, int imageSelectRequestCode) {
+        this.CONTEXT = context;
+        this.IMAGE_PATH = imagePath;
+        this.IMAGE_FORMAT = imageFormat;
         PERMISSIONS_REQUEST_CAPTURE = permissionRequestCodeSelect;
         REQUEST_IMAGE_CAPTURE = imageCaptureRequestCode;
 
@@ -45,42 +48,42 @@ public abstract class TakePictureDelegate {
     }
 
     public void makePicture() {
-        if (context.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                context.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                context.checkPermission(Manifest.permission.CAMERA, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+        if (CONTEXT.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
+                CONTEXT.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
+                CONTEXT.checkPermission(Manifest.permission.CAMERA, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(context,
+            ActivityCompat.requestPermissions(CONTEXT,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                     PERMISSIONS_REQUEST_CAPTURE);
             return;
         }
-        PackageManager pManager = context.getPackageManager();
+        PackageManager pManager = CONTEXT.getPackageManager();
         boolean hasCamera = pManager.hasSystemFeature(PackageManager.FEATURE_CAMERA);
         if (!hasCamera) {
-            Toast.makeText(context, R.string.no_camera_on_device, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CONTEXT, R.string.no_camera_on_device, Toast.LENGTH_SHORT).show();
             return;
         }
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(pManager) != null) {
-            context.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            CONTEXT.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
     public void selectFromGallery() {
-        if (context.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SELECT);
+        if (CONTEXT.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(CONTEXT, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SELECT);
             return;
         }
 
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        context.startActivityForResult(Intent.createChooser(intent, getChooserTitle()), REQUEST_SELECT_PICTURE);
+        CONTEXT.startActivityForResult(Intent.createChooser(intent, getChooserTitle()), REQUEST_SELECT_PICTURE);
     }
 
     protected String getChooserTitle(){
-        return context.getString(R.string.select_image);
+        return CONTEXT.getString(R.string.select_image);
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -123,14 +126,14 @@ public abstract class TakePictureDelegate {
         Bundle extras = data.getExtras();
         Bitmap photo = (Bitmap) extras.get("data");
         try {
-            File dir = new File(Environment.getExternalStorageDirectory() + "/CService/Photo");
+            File dir = new File(Environment.getExternalStorageDirectory() + IMAGE_PATH);
             boolean b = dir.exists() || dir.mkdirs();
 
-            File file = new File(dir,System.currentTimeMillis() + ".jpeg");
+            File file = new File(dir,System.currentTimeMillis() + IMAGE_FORMAT.suffix);
             b = file.exists() || file.createNewFile();
 
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            photo.compress(IMAGE_FORMAT.format, 100, bos);
             bos.flush();
             bos.close();
 

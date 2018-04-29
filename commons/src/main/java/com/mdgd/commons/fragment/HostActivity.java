@@ -24,9 +24,7 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
-        if(presenter == null) {
-            presenter = createPresenter();
-        }
+
         container = findViewById(getFragmentContainerId());
         if(savedInstanceState == null) {
             setFragment(getFirstFragment());
@@ -43,8 +41,6 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
     }
 
     protected abstract void restoreFragments(List<Fragment> fragments);
-
-    protected abstract T createPresenter();
 
     @Override
     protected int getLayoutResId(){

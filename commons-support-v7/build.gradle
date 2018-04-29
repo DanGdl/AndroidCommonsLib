@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 26
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -25,9 +25,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':contract')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':resources')
+    implementation project(':contract')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

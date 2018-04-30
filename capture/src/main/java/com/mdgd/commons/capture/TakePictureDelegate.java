@@ -14,7 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
-import com.mdgd.commons.R;
+import com.mdgd.commons.resources.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

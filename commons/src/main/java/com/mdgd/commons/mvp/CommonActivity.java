@@ -10,10 +10,10 @@ import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
-import com.mdgd.commons.R;
 import com.mdgd.commons.contract.mvp.ViewContract;
 import com.mdgd.commons.contract.progress.IProgressView;
 import com.mdgd.commons.contract.progress.ProgressDialogWrapper;
+import com.mdgd.commons.resources.R;
 
 /**
  * Created by Dan

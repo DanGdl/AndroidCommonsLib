@@ -25,7 +25,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Comm
 
     @Override
     public void onBindViewHolder(CommonViewHolder<T> holder, int position) {
-        if(items != null && position < items.size()) {
+        if(items != null && position >= 0 && position < items.size()) {
             holder.bindItem(items.get(position), position);
         }
     }

@@ -66,12 +66,10 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @TargetApi(16)
     protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
-        boolean result = false;
+        boolean result = true;
         for(String p : permissions){
-            if(checkPermission(p, android.os.Process.myPid(), Process.myUid()) == PackageManager.PERMISSION_GRANTED){
-                result = true;
-            }
-            else{
+            if(checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED){
+                result = false;
                 askPermissions(requestCode, permissions);
             }
         }

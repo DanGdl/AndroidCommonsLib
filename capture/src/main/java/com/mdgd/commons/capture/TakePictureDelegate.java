@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -126,7 +125,7 @@ public abstract class TakePictureDelegate {
         Bundle extras = data.getExtras();
         Bitmap photo = (Bitmap) extras.get("data");
         try {
-            File dir = new File(Environment.getExternalStorageDirectory() + IMAGE_PATH);
+            File dir = new File(IMAGE_PATH);
             boolean b = dir.exists() || dir.mkdirs();
 
             File file = new File(dir,System.currentTimeMillis() + IMAGE_FORMAT.suffix);

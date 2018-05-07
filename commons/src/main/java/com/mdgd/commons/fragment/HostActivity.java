@@ -40,7 +40,7 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
         }
     }
 
-    protected void restoreFragments(List<Fragment> fragments){};
+    protected void restoreFragments(List<Fragment> fragments){}
 
     @Override
     protected int getLayoutResId(){

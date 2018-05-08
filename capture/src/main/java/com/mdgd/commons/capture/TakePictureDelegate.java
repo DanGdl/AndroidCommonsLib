@@ -11,6 +11,7 @@ import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.mdgd.commons.resources.R;
@@ -24,26 +25,37 @@ import java.io.FileOutputStream;
  * on 21/02/2018.
  */
 
-public abstract class TakePictureDelegate {
+public class TakePictureDelegate {
+
+    private final Activity CONTEXT;
+    private final ImageFormats IMAGE_FORMAT;
+
+    private final ISavePictureDirectory FUN_IMAGE_DIR;
+    private final ISavePicturePath FUN_IMAGE_PATH ;
+    private final String IMAGE_PATH;
 
     private final int PERMISSIONS_REQUEST_SELECT;
     private final int REQUEST_IMAGE_CAPTURE;
     private final int PERMISSIONS_REQUEST_CAPTURE;
     private final int REQUEST_SELECT_PICTURE;
-    private final Activity CONTEXT;
-    private final String IMAGE_PATH;
-    private final ImageFormats IMAGE_FORMAT;
+    private final IOnImageObtained ON_IMAGE_OBTAINED;
 
-    protected TakePictureDelegate(Activity context, String imagePath, ImageFormats imageFormat, int permissionRequestCodeCapture,
-                                  int imageCaptureRequestCode, int permissionRequestCodeSelect, int imageSelectRequestCode) {
-        this.CONTEXT = context;
-        this.IMAGE_PATH = imagePath;
-        this.IMAGE_FORMAT = imageFormat;
-        PERMISSIONS_REQUEST_CAPTURE = permissionRequestCodeSelect;
-        REQUEST_IMAGE_CAPTURE = imageCaptureRequestCode;
+    public TakePictureDelegate(Activity activity, ImageFormats format, String savePicDirPath,
+                               ISavePicturePath savePicDirPathFun, ISavePictureDirectory savePicDir,
+                               int rcPermissionCamera, int rcPermissionSelect, int requestCodeCapture,
+                               int requestCodeSelect, IOnImageObtained onImageObtained) {
+        this.CONTEXT = activity;
+        this.IMAGE_FORMAT = format;
+        this.IMAGE_PATH = savePicDirPath;
+        this.FUN_IMAGE_PATH = savePicDirPathFun;
+        this.FUN_IMAGE_DIR = savePicDir;
+        PERMISSIONS_REQUEST_CAPTURE = rcPermissionCamera;
+        REQUEST_IMAGE_CAPTURE = rcPermissionSelect;
 
-        PERMISSIONS_REQUEST_SELECT = permissionRequestCodeCapture;
-        REQUEST_SELECT_PICTURE = imageSelectRequestCode;
+        PERMISSIONS_REQUEST_SELECT = requestCodeSelect;
+        REQUEST_SELECT_PICTURE = requestCodeCapture;
+
+        ON_IMAGE_OBTAINED = onImageObtained;
     }
 
     public void makePicture() {
@@ -116,7 +128,9 @@ public abstract class TakePictureDelegate {
         }
         else if (requestCode == REQUEST_SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
-                updateImage(data.getData());
+                if(ON_IMAGE_OBTAINED != null) {
+                    ON_IMAGE_OBTAINED.onImageObtained(data.getData());
+                }
             }
         }
     }
@@ -125,7 +139,7 @@ public abstract class TakePictureDelegate {
         Bundle extras = data.getExtras();
         Bitmap photo = (Bitmap) extras.get("data");
         try {
-            File dir = new File(IMAGE_PATH);
+            File dir = getSavePictureFile();
             boolean b = dir.exists() || dir.mkdirs();
 
             File file = new File(dir,System.currentTimeMillis() + IMAGE_FORMAT.suffix);
@@ -136,12 +150,101 @@ public abstract class TakePictureDelegate {
             bos.flush();
             bos.close();
 
-            updateImage(Uri.fromFile(file));
+            if(ON_IMAGE_OBTAINED != null) {
+                ON_IMAGE_OBTAINED.onImageObtained(Uri.fromFile(file));
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public abstract void updateImage(Uri imageUri);
+    private File getSavePictureFile() {
+        if(FUN_IMAGE_DIR != null){
+            return FUN_IMAGE_DIR.getSavePictureDirectory();
+        }
+        if(FUN_IMAGE_PATH != null){
+            return new File(FUN_IMAGE_PATH.getSavePictureDirectoryPath());
+        }
+        if(!TextUtils.isEmpty(IMAGE_PATH)){
+            return new File(IMAGE_PATH);
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+    public static class Builder {
+
+        private final Activity activity;
+        private ImageFormats format;
+        private String savePicDirPath;
+        private ISavePicturePath savePicDirPathFun;
+        private ISavePictureDirectory savePicDir;
+        private int rcPermissionSelect;
+        private int rcPermissionCamera;
+        private int requestCodeSelect;
+        private int requestCodeCapture;
+        private IOnImageObtained onImageObtained;
+
+        public Builder(Activity activity){
+            this.activity = activity;
+        }
+
+        public Builder setPictureFormat(ImageFormats format){
+            this.format = format;
+            return this;
+        }
+
+        public Builder setSavePictureDirectory(String path){
+            this.savePicDirPath = path;
+            return this;
+        }
+
+        public Builder setSavePictureDirectory(ISavePicturePath path){
+            this.savePicDirPathFun = path;
+            return this;
+        }
+
+        public Builder setSavePictureDirectory(ISavePictureDirectory directory){
+            this.savePicDir = directory;
+            return this;
+        }
+
+        public Builder setRequestCodePermissionSelectFromGallery(int requestCodePermissionSelectFromGallery){
+            this.rcPermissionSelect = requestCodePermissionSelectFromGallery;
+            return this;
+        }
+
+        public Builder setRequestCodePermissionCamera(int requestCodePermissionCamera){
+            this.rcPermissionCamera = requestCodePermissionCamera;
+            return this;
+        }
+
+        public Builder setRequestCodeSelect(int requestCodeSelect){
+            this.requestCodeSelect = requestCodeSelect;
+            return this;
+        }
+
+        public Builder setRequestCodeCapture(int requestCodeCapture){
+            this.requestCodeCapture = requestCodeCapture;
+            return this;
+        }
+
+        public Builder setOnImageObtained(IOnImageObtained listener){
+            this.onImageObtained = listener;
+            return this;
+        }
+
+        public TakePictureDelegate build(){
+            return new TakePictureDelegate(activity, format, savePicDirPath, savePicDirPathFun,
+                    savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained);
+        }
+    }
 }

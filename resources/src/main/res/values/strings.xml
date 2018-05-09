@@ -2,7 +2,5 @@
     <string name="res_app_name">resources</string>
     <string name="main_app_name">Commons</string>
     <string name="main_app_name_support">support-v7</string>
-    <string name="no_camera_on_device">No camera on device</string>
-    <string name="select_image">Select image</string>
     <string name="waiting">Waiting&#8230;</string>
 </resources>

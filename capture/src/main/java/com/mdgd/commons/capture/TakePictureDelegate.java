@@ -7,14 +7,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
-
-import com.mdgd.commons.resources.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -38,17 +37,21 @@ public class TakePictureDelegate {
     private final int REQUEST_IMAGE_CAPTURE;
     private final int PERMISSIONS_REQUEST_CAPTURE;
     private final int REQUEST_SELECT_PICTURE;
+
+    private final String CHOOSER_TITLE;
     private final IOnImageObtained ON_IMAGE_OBTAINED;
 
-    public TakePictureDelegate(Activity activity, ImageFormats format, String savePicDirPath,
-                               ISavePicturePath savePicDirPathFun, ISavePictureDirectory savePicDir,
-                               int rcPermissionCamera, int rcPermissionSelect, int requestCodeCapture,
-                               int requestCodeSelect, IOnImageObtained onImageObtained) {
+    private TakePictureDelegate(Activity activity, ImageFormats format, String savePicDirPath,
+                                ISavePicturePath savePicDirPathFun, ISavePictureDirectory savePicDir,
+                                int rcPermissionCamera, int rcPermissionSelect, int requestCodeCapture,
+                                int requestCodeSelect, IOnImageObtained onImageObtained, String chooserTitle) {
         this.CONTEXT = activity;
         this.IMAGE_FORMAT = format;
+
         this.IMAGE_PATH = savePicDirPath;
         this.FUN_IMAGE_PATH = savePicDirPathFun;
         this.FUN_IMAGE_DIR = savePicDir;
+
         PERMISSIONS_REQUEST_CAPTURE = rcPermissionCamera;
         REQUEST_IMAGE_CAPTURE = rcPermissionSelect;
 
@@ -56,6 +59,7 @@ public class TakePictureDelegate {
         REQUEST_SELECT_PICTURE = requestCodeCapture;
 
         ON_IMAGE_OBTAINED = onImageObtained;
+        CHOOSER_TITLE = chooserTitle == null ? getChooserTitle() : chooserTitle;
     }
 
     public void makePicture() {
@@ -90,7 +94,7 @@ public class TakePictureDelegate {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        CONTEXT.startActivityForResult(Intent.createChooser(intent, getChooserTitle()), REQUEST_SELECT_PICTURE);
+        CONTEXT.startActivityForResult(Intent.createChooser(intent, CHOOSER_TITLE), REQUEST_SELECT_PICTURE);
     }
 
     protected String getChooserTitle(){
@@ -163,75 +167,111 @@ public class TakePictureDelegate {
         if(FUN_IMAGE_DIR != null){
             return FUN_IMAGE_DIR.getSavePictureDirectory();
         }
-        if(FUN_IMAGE_PATH != null){
+        else if(FUN_IMAGE_PATH != null){
             return new File(FUN_IMAGE_PATH.getSavePictureDirectoryPath());
         }
-        if(!TextUtils.isEmpty(IMAGE_PATH)){
+        else if(!TextUtils.isEmpty(IMAGE_PATH)){
             return new File(IMAGE_PATH);
         }
-        return null;
+        else {
+            return new File(Environment.getDataDirectory() + "/Pictures");
+        }
     }
 
 
-
-
-
-
-
-
-
+    /**
+     * Example:
+     * new TakePictureDelegate.Builder(ChatsActivity.this)
+     * .setPictureFormat(ImageFormats.JPEG)
+     * .setSavePictureDirectory(() -> Environment.getExternalStorageDirectory() + Defines.PATH_IMAGES)
+     * .setRequestCodePermissionCamera(100)
+     * .setRequestCodePermissionSelectFromGallery(101)
+     * .setRequestCodeCapture(102)
+     * .setRequestCodeSelect(103)
+     * .setChooserTitle("Select image")
+     * .setOnImageObtained((Uri imageUri) -> { do something })
+     * .build();
+     */
     public static class Builder {
 
         private final Activity activity;
-        private ImageFormats format;
+        private ImageFormats format = ImageFormats.JPEG;
         private String savePicDirPath;
         private ISavePicturePath savePicDirPathFun;
         private ISavePictureDirectory savePicDir;
-        private int rcPermissionSelect;
-        private int rcPermissionCamera;
-        private int requestCodeSelect;
-        private int requestCodeCapture;
+        private int rcPermissionSelect = 101;
+        private int rcPermissionCamera = 102;
+        private int requestCodeSelect = 103;
+        private int requestCodeCapture = 104;
         private IOnImageObtained onImageObtained;
+        private String chooserTitle;
 
         public Builder(Activity activity){
             this.activity = activity;
         }
 
+        /**
+         * default value ImageFormats.JPEG
+         */
         public Builder setPictureFormat(ImageFormats format){
             this.format = format;
             return this;
         }
 
+        /**
+         * priority low
+         * default value Environment.getDataDirectory() + "/Pictures"
+         */
         public Builder setSavePictureDirectory(String path){
             this.savePicDirPath = path;
             return this;
         }
 
+        /**
+         * priority medium
+         * default value Environment.getDataDirectory() + "/Pictures"
+         */
         public Builder setSavePictureDirectory(ISavePicturePath path){
             this.savePicDirPathFun = path;
             return this;
         }
 
+        /**
+         * priority high
+         * default value Environment.getDataDirectory() + "/Pictures"
+         */
         public Builder setSavePictureDirectory(ISavePictureDirectory directory){
             this.savePicDir = directory;
             return this;
         }
 
+        /**
+         * default value 101
+         */
         public Builder setRequestCodePermissionSelectFromGallery(int requestCodePermissionSelectFromGallery){
             this.rcPermissionSelect = requestCodePermissionSelectFromGallery;
             return this;
         }
 
+        /**
+         * default value 102
+         */
         public Builder setRequestCodePermissionCamera(int requestCodePermissionCamera){
             this.rcPermissionCamera = requestCodePermissionCamera;
             return this;
         }
 
+        /**
+         * default value 103
+         */
         public Builder setRequestCodeSelect(int requestCodeSelect){
             this.requestCodeSelect = requestCodeSelect;
             return this;
         }
 
+        /**
+         * default value 104
+         */
         public Builder setRequestCodeCapture(int requestCodeCapture){
             this.requestCodeCapture = requestCodeCapture;
             return this;
@@ -242,9 +282,17 @@ public class TakePictureDelegate {
             return this;
         }
 
+        /**
+         * default value "Select image"
+         */
+        public Builder setChooserTitle(String chooserTitle){
+            this.chooserTitle = chooserTitle;
+            return this;
+        }
+
         public TakePictureDelegate build(){
             return new TakePictureDelegate(activity, format, savePicDirPath, savePicDirPathFun,
-                    savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained);
+                    savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained, chooserTitle);
         }
     }
 }

@@ -136,11 +136,11 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
 
-
+    @Deprecated
     protected void setFragment(Fragment fragment) {
         setFragment(fragment, false, null);
     }
-
+    @Deprecated
     protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
         if(addToStack){
@@ -149,10 +149,49 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         transaction.commit();
     }
 
-    protected void setFragmentToBackStack(Fragment fragment) {
-        setFragment(fragment, true, null);
+    protected void addFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction().add(getFragmentContainerId(), fragment);
+        if(addToStack){
+            transaction.addToBackStack(backStackTag);
+        }
+        transaction.commit();
     }
 
+    protected void addFragment(Fragment fragment) {
+        addFragment(fragment, false, null);
+    }
+
+    protected void addFragmentToBackStack(Fragment fragment) {
+        addFragment(fragment, true, null);
+    }
+
+    protected void replaceFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction().add(getFragmentContainerId(), fragment);
+        if(addToStack){
+            transaction.addToBackStack(backStackTag);
+        }
+        transaction.commit();
+    }
+
+    protected void replaceFragment(Fragment fragment) {
+        replaceFragment(fragment, false, null);
+    }
+
+    protected void replaceFragmentToBackStack(Fragment fragment) {
+        replaceFragment(fragment, true, null);
+    }
+
+    protected void removeFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction().remove(fragment);
+        if(addToStack){
+            transaction.addToBackStack(backStackTag);
+        }
+        transaction.commit();
+    }
+
+    protected void removeFragment(Fragment fragment) {
+        removeFragment(fragment, false, null);
+    }
     protected int getFragmentContainerId(){
         return R.id.fragmentContainer;
     }

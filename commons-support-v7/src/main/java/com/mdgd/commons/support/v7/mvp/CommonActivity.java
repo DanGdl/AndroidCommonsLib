@@ -115,7 +115,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         }
     }
 
-    private IProgressView createProgressView(String title, String message) {
+    protected IProgressView createProgressView(String title, String message) {
         return new ProgressDialogWrapper(this, title, message);
     }
 
@@ -139,11 +139,11 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
 
 
-
+    @Deprecated
     protected void setFragment(Fragment fragment) {
         setFragment(fragment, false, null);
     }
-
+    @Deprecated
     protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
         if(addToStack){
@@ -151,9 +151,53 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         }
         transaction.commit();
     }
-
+    @Deprecated
     protected void setFragmentToBackStack(Fragment fragment) {
         setFragment(fragment, true, null);
+    }
+
+    protected void addFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), fragment);
+        if(addToStack){
+            transaction.addToBackStack(backStackTag);
+        }
+        transaction.commit();
+    }
+
+    protected void addFragment(Fragment fragment) {
+        addFragment(fragment, false, null);
+    }
+
+    protected void addFragmentToBackStack(Fragment fragment) {
+        addFragment(fragment, true, null);
+    }
+
+    protected void replaceFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), fragment);
+        if(addToStack){
+            transaction.addToBackStack(backStackTag);
+        }
+        transaction.commit();
+    }
+
+    protected void replaceFragment(Fragment fragment) {
+        replaceFragment(fragment, false, null);
+    }
+
+    protected void replaceFragmentToBackStack(Fragment fragment) {
+        replaceFragment(fragment, true, null);
+    }
+
+    protected void removeFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().remove(fragment);
+        if(addToStack){
+            transaction.addToBackStack(backStackTag);
+        }
+        transaction.commit();
+    }
+
+    protected void removeFragment(Fragment fragment) {
+        removeFragment(fragment, false, null);
     }
 
     protected int getFragmentContainerId(){

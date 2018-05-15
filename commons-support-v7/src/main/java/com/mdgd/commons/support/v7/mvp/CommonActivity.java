@@ -173,7 +173,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     protected void replaceFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), fragment);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
         if(addToStack){
             transaction.addToBackStack(backStackTag);
         }

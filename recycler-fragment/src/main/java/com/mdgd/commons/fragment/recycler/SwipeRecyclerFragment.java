@@ -11,8 +11,8 @@ import com.mdgd.commons.contract.fragment.FragmentContract;
  * on 02/01/2018.
  */
 
-public abstract class SwipeRecyclerFragment<HOST extends FragmentContract.IHost, X extends FragmentContract.IPresenter, ITEM>
-        extends RecyclerFragment<HOST, X, ITEM> implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresenter, ITEM>
+        extends RecyclerFragment<X, ITEM> implements SwipeRefreshLayout.OnRefreshListener {
 
     protected SwipeRefreshLayout swipe;
 

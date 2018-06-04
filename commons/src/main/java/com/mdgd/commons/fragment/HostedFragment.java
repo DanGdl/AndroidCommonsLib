@@ -15,10 +15,11 @@ import com.mdgd.commons.contract.fragment.FragmentContract;
  * on 19/07/2017.
  */
 
-public abstract class HostedFragment<X extends FragmentContract.IPresenter>
+public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y extends FragmentContract.IHost>
         extends Fragment implements FragmentContract.IFragment, FragmentContract.IView {
     private boolean hasProgress = false;
     protected final X presenter;
+    protected Y host;
 
     public HostedFragment(){
         presenter = getPresenter();
@@ -30,7 +31,8 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter>
     @SuppressWarnings("unchecked")
     public void onAttach(Context context) {
         super.onAttach(context);
-        presenter.setHost(context);
+        host = (Y)context;
+        presenter.setHost(host);
     }
 
     @Nullable

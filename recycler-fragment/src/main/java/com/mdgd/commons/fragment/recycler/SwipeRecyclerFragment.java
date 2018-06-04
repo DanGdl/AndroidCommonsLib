@@ -5,14 +5,15 @@ import android.view.View;
 
 import com.mdgd.commons.R;
 import com.mdgd.commons.contract.fragment.FragmentContract;
+import com.mdgd.commons.contract.mvp.ViewContract;
 
 /**
  * Created by Dan
  * on 02/01/2018.
  */
 
-public abstract class SwipeRecyclerFragment<HOST extends FragmentContract.IHost, ITEM> extends RecyclerFragment<HOST, ITEM>
-        implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class SwipeRecyclerFragment<HOST extends FragmentContract.IHost, X extends ViewContract.IPresenter, ITEM>
+        extends RecyclerFragment<HOST, X, ITEM> implements SwipeRefreshLayout.OnRefreshListener {
 
     protected SwipeRefreshLayout swipe;
 

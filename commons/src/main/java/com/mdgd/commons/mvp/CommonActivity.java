@@ -23,27 +23,22 @@ import com.mdgd.commons.resources.R;
 public abstract class CommonActivity<T extends ViewContract.IPresenter> extends Activity
         implements ViewContract.IView {
     private boolean onForeground = false;
-    protected T presenter;
+    protected final T presenter;
     private IProgressView progress;
+
+    public CommonActivity(){
+        presenter = getPresenter();
+    }
+
+    protected abstract T getPresenter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(presenter == null) {
-            setupPresenter();
-        }
         setContentView(getLayoutResId());
     }
 
-    protected abstract void setupPresenter();
-
     protected abstract int getLayoutResId();
-
-    @Override
-    protected void onStop() {
-        hideProgress();
-        super.onStop();
-    }
 
     @Override
     protected void onResume() {
@@ -58,11 +53,10 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     @Override
-    public void setPresenter(ViewContract.IPresenter presenter) {
-        this.presenter = (T)presenter;
+    protected void onStop() {
+        hideProgress();
+        super.onStop();
     }
-
-
 
     @TargetApi(16)
     protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
@@ -90,11 +84,9 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         return result;
     }
 
-
-
     @Override
     public void showProgress(){
-        showProgress("", getString(R.string.waiting));
+        showProgress("", "");
     }
 
     @Override
@@ -135,11 +127,11 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         Toast.makeText(this, getString(msgRes, query), Toast.LENGTH_SHORT).show();
     }
 
-
     @Deprecated
     protected void setFragment(Fragment fragment) {
         setFragment(fragment, false, null);
     }
+
     @Deprecated
     protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
@@ -192,6 +184,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     protected void removeFragment(Fragment fragment) {
         removeFragment(fragment, false, null);
     }
+
     protected int getFragmentContainerId(){
         return R.id.fragmentContainer;
     }

@@ -2,12 +2,9 @@ package com.mdgd.commons.contract.mvp;
 
 public class ViewContract {
 
-    public interface IPresenter {
-        void onDestroy();
-    }
+    public interface IPresenter {}
 
     public interface IView {
-        void setPresenter(IPresenter presenter);
 
         void showProgress();
 

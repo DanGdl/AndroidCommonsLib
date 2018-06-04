@@ -23,8 +23,6 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResId());
-
         container = findViewById(getFragmentContainerId());
         if(savedInstanceState == null) {
             addFragment(getFirstFragment());

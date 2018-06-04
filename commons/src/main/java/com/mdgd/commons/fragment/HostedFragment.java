@@ -9,15 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
-import com.mdgd.commons.contract.mvp.ViewContract;
 
 /**
  * Created by Dan
  * on 19/07/2017.
  */
 
-public abstract class HostedFragment<T extends FragmentContract.IHost, X extends ViewContract.IPresenter>
-        extends Fragment implements FragmentContract.IFragment {
+public abstract class HostedFragment<T extends FragmentContract.IHost, X extends FragmentContract.IPresenter>
+        extends Fragment implements FragmentContract.IFragment, FragmentContract.IView {
     private boolean hasProgress = false;
     protected final X presenter;
     protected T host;

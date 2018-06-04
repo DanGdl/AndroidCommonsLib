@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
-import com.mdgd.commons.contract.mvp.ViewContract;
 import com.mdgd.commons.recycler.CommonRecyclerAdapter;
 import com.mdgd.commons.resources.R;
 import com.mdgd.commons.support.v7.fragment.HostedFragment;
@@ -14,8 +13,8 @@ import com.mdgd.commons.support.v7.fragment.HostedFragment;
  * on 02/01/2018.
  */
 
-public abstract class RecyclerFragment<HOST extends FragmentContract.IHost, X extends ViewContract.IPresenter, ITEM>
-        extends HostedFragment<HOST, X> implements CommonRecyclerAdapter.IOnItemClickListener<ITEM> {
+public abstract class RecyclerFragment<X extends FragmentContract.IPresenter, ITEM>
+        extends HostedFragment<X> implements CommonRecyclerAdapter.IOnItemClickListener<ITEM> {
 
     protected CommonRecyclerAdapter<ITEM> adapter;
     protected RecyclerView recycler;

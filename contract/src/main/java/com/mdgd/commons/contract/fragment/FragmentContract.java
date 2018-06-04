@@ -11,11 +11,17 @@ public class FragmentContract {
         void finish();
 
         void onBackPressed();
+
+        void showToast(int msgRes);
+
+        void showToast(int msgRes, String query);
     }
 
-    public interface IPresenter {
+    public interface IPresenter<T extends FragmentContract.IHost> {
 
         void setHost(Object host);
+
+        T getHost();
     }
 
     public interface IFragment {

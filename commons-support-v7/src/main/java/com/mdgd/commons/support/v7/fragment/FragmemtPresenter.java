@@ -9,21 +9,11 @@ import java.lang.ref.WeakReference;
  * on 08/10/2017.
  */
 
-public abstract class FragmemtPresenter<T extends FragmentContract.IView, X extends FragmentContract.IHost> implements FragmentContract.IPresenter<X> {
+public abstract class FragmemtPresenter<T extends FragmentContract.IView, X extends FragmentContract.IHost> implements FragmentContract.IPresenter {
     protected final T view;
     protected WeakReference<X> hostRef;
 
     public FragmemtPresenter(T view){
         this.view = view;
-    }
-
-    @Override
-    public void setHost(Object context) {
-        hostRef = new WeakReference<>((X) context);
-    }
-
-    @Override
-    public X getHost() {
-        return hostRef == null ? null : hostRef.get();
     }
 }

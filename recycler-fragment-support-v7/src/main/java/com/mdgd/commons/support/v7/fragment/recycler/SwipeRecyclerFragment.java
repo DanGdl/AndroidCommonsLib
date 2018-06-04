@@ -35,6 +35,7 @@ public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresente
 
     @Override
     public void showProgress() {
+        super.showProgress();
         if(swipe != null) {
             swipe.setRefreshing(true);
         }
@@ -42,6 +43,7 @@ public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresente
 
     @Override
     public void hideProgress() {
+        super.hideProgress();
         if(swipe != null) {
             swipe.setRefreshing(false);
         }

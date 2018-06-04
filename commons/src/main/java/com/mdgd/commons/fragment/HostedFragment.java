@@ -3,10 +3,12 @@ package com.mdgd.commons.fragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
 
@@ -16,7 +18,7 @@ import com.mdgd.commons.contract.fragment.FragmentContract;
  */
 
 public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y extends FragmentContract.IHost>
-        extends Fragment implements FragmentContract.IFragment, FragmentContract.IView {
+        extends Fragment implements FragmentContract.IFragment, FragmentContract.IView<Y> {
     private boolean hasProgress = false;
     protected final X presenter;
     protected Y host;
@@ -32,7 +34,6 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     public void onAttach(Context context) {
         super.onAttach(context);
         host = (Y)context;
-        presenter.setHost(host);
     }
 
     @Nullable
@@ -57,8 +58,39 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     }
 
     @Override
-    public void showProgress() {}
+    @CallSuper
+    public void showProgress() {
+        if(!hasProgress() && host != null){
+            host.showProgress();
+        }
+    }
 
     @Override
-    public void hideProgress() {}
+    @CallSuper
+    public void hideProgress() {
+        if(!hasProgress() && host != null){
+            host.hideProgress();
+        }
+    }
+
+    @Override
+    public Y getIHost() {
+        return host;
+    }
+
+    @Override
+    public void showToast(int msgRes) {
+        Context ctx = getActivity();
+        if(ctx != null) {
+            Toast.makeText(ctx, msgRes, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void showToast(int msgRes, String query) {
+        Context ctx = getActivity();
+        if(ctx != null) {
+            Toast.makeText(ctx, getString(msgRes, query), Toast.LENGTH_LONG).show();
+        }
+    }
 }

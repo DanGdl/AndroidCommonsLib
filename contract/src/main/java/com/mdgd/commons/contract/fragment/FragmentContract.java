@@ -17,14 +17,10 @@ public class FragmentContract {
         void showToast(int msgRes, String query);
     }
 
-    public interface IPresenter<T extends FragmentContract.IHost> {
-
-        void setHost(Object host);
-
-        T getHost();
-    }
+    public interface IPresenter {}
 
     public interface IFragment {
+
         boolean hasProgress();
 
         void showProgress();
@@ -32,12 +28,18 @@ public class FragmentContract {
         void hideProgress();
     }
 
-    public interface IView {
+    public interface IView<T extends FragmentContract.IHost> {
+
+        T getIHost();
 
         boolean hasProgress();
 
         void showProgress();
 
         void hideProgress();
+
+        void showToast(int msgRes);
+
+        void showToast(int msgRes, String query);
     }
 }

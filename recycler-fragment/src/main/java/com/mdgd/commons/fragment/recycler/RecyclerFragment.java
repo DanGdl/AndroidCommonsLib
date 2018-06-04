@@ -1,5 +1,6 @@
 package com.mdgd.commons.fragment.recycler;
 
+import android.support.annotation.CallSuper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -25,6 +26,7 @@ public abstract class RecyclerFragment<X extends FragmentContract.IPresenter, Y 
     }
 
     @Override
+    @CallSuper
     protected void initViews(View v) {
         recycler = v.findViewById(R.id.fragment_recycler);
         adapter = getAdapter();

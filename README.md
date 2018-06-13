@@ -10,5 +10,5 @@ allprojects {
 }
 
 dependencies {
-	compile 'com.github.DanGdl:AndroidCommonsLib:0.0.1'
+	compile 'com.github.DanGdl:AndroidCommonsLib:version'
 }

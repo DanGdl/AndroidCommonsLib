@@ -19,7 +19,7 @@ import com.mdgd.commons.contract.fragment.FragmentContract;
  */
 
 public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y extends FragmentContract.IHost> extends Fragment
-        implements FragmentContract.IFragment, FragmentContract.IView<Y> {
+        implements FragmentContract.IFragment, FragmentContract.IView {
     private boolean hasProgress = false;
     protected final X presenter;
     protected Y host;
@@ -72,11 +72,6 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
         if(!hasProgress() && host != null){
             host.hideProgress();
         }
-    }
-
-    @Override
-    public Y getIHost() {
-        return host;
     }
 
     @Override

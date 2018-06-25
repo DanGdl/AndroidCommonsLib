@@ -28,9 +28,7 @@ public class FragmentContract {
         void hideProgress();
     }
 
-    public interface IView<T extends FragmentContract.IHost> {
-
-        T getIHost();
+    public interface IView {
 
         boolean hasProgress();
 

@@ -1,4 +1,4 @@
-# AndroidCommonsLib
+# AndroidCommonsLib [![Release](https://jitpack.io/v/DanGdl/AndroidCommonsLib.svg)](https://jitpack.io/#DanGdl/AndroidCommonsLib)
 Few abstract classes for android apps
 
 Implementation (gradle):
@@ -10,5 +10,5 @@ allprojects {
 }
 
 dependencies {
-	compile 'com.github.DanGdl:AndroidCommonsLib:0.0.1'
+	compile 'com.github.DanGdl:AndroidCommonsLib:version'
 }

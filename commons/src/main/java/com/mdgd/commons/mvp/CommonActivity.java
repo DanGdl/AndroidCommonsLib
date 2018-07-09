@@ -4,19 +4,17 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Process;
-import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.mdgd.commons.contract.mvp.ViewContract;
 import com.mdgd.commons.contract.progress.IProgressView;
 import com.mdgd.commons.contract.progress.ProgressDialogWrapper;
 import com.mdgd.commons.resources.R;
+import com.mdgd.commons.utilities.PermissionsUtil;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 01/01/2018.
  */
 
@@ -60,28 +58,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @TargetApi(16)
     protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
-        boolean result = true;
-        for(String p : permissions){
-            if(checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED){
-                result = false;
-                askPermissions(requestCode, permissions);
-            }
-        }
-        return result;
-    }
-
-    private void askPermissions(int requestCode, String[] permissions) {
-        ActivityCompat.requestPermissions(this, permissions, requestCode);
-    }
-
-    protected boolean areAllPermissionsGranted(int[] grantResults) {
-        boolean result = false;
-        for (int i : grantResults) {
-            if (i == PackageManager.PERMISSION_GRANTED) {
-                result = true;
-            }
-        }
-        return result;
+        return PermissionsUtil.requestPermissionsIfNeed(this, requestCode, permissions);
     }
 
     @Override

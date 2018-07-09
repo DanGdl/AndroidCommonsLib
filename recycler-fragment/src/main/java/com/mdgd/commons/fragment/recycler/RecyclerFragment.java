@@ -10,7 +10,7 @@ import com.mdgd.commons.fragment.HostedFragment;
 import com.mdgd.commons.recycler.CommonRecyclerAdapter;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 02/01/2018.
  */
 

@@ -3,14 +3,14 @@ package com.mdgd.commons.fragment;
 import com.mdgd.commons.contract.fragment.FragmentContract;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 08/10/2017.
  */
 
-public abstract class FragmemtPresenter<T extends FragmentContract.IView> implements FragmentContract.IPresenter {
+public abstract class FragmentPresenter<T extends FragmentContract.IView> implements FragmentContract.IPresenter {
     protected final T view;
 
-    public FragmemtPresenter(T view){
+    public FragmentPresenter(T view){
         this.view = view;
     }
 }

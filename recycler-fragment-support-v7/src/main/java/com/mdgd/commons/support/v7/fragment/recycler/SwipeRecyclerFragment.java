@@ -7,7 +7,7 @@ import com.mdgd.commons.contract.fragment.FragmentContract;
 import com.mdgd.commons.resources.R;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 02/01/2018.
  */
 

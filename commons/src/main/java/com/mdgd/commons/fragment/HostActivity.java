@@ -12,7 +12,7 @@ import com.mdgd.commons.resources.R;
 import java.util.List;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 25/07/2017.
  */
 

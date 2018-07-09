@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import java.util.List;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 01/01/2018.
  */
 

@@ -9,7 +9,7 @@ import com.mdgd.commons.resources.R;
 import com.mdgd.commons.support.v7.fragment.HostedFragment;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 02/01/2018.
  */
 

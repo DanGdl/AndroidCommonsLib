@@ -1,24 +1,21 @@
 package com.mdgd.commons.fragment;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Process;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
+import com.mdgd.commons.utilities.PermissionsUtil;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 19/07/2017.
  */
 
@@ -97,31 +94,6 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
 
     @TargetApi(16)
     protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
-        boolean result = true;
-        Activity ctx = getActivity();
-        if(ctx == null){
-            return false;
-        }
-        for(String p : permissions){
-            if(ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED){
-                result = false;
-                askPermissions(ctx, requestCode, permissions);
-            }
-        }
-        return result;
-    }
-
-    private void askPermissions(Activity ctx, int requestCode, String[] permissions) {
-        ActivityCompat.requestPermissions(ctx, permissions, requestCode);
-    }
-
-    protected boolean areAllPermissionsGranted(int[] grantResults) {
-        boolean result = false;
-        for (int i : grantResults) {
-            if (i == PackageManager.PERMISSION_GRANTED) {
-                result = true;
-            }
-        }
-        return result;
+        return PermissionsUtil.requestPermissionsIfNeed(getActivity(), requestCode, permissions);
     }
 }

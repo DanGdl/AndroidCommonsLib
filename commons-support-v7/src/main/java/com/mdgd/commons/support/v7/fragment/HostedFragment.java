@@ -1,10 +1,15 @@
 package com.mdgd.commons.support.v7.fragment;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,5 +93,36 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
         if(ctx != null) {
             Toast.makeText(ctx, getString(msgRes, query), Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    @TargetApi(16)
+    protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
+        boolean result = true;
+        Activity ctx = getActivity();
+        if(ctx == null){
+            return false;
+        }
+        for(String p : permissions){
+            if(ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED){
+                result = false;
+                askPermissions(ctx, requestCode, permissions);
+            }
+        }
+        return result;
+    }
+
+    private void askPermissions(Activity ctx, int requestCode, String[] permissions) {
+        ActivityCompat.requestPermissions(ctx, permissions, requestCode);
+    }
+
+    protected boolean areAllPermissionsGranted(int[] grantResults) {
+        boolean result = false;
+        for (int i : grantResults) {
+            if (i == PackageManager.PERMISSION_GRANTED) {
+                result = true;
+            }
+        }
+        return result;
     }
 }

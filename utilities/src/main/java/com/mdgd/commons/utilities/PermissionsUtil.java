@@ -2,6 +2,7 @@ package com.mdgd.commons.utilities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Process;
 import android.support.v4.app.ActivityCompat;
@@ -13,15 +14,34 @@ import android.support.v4.app.ActivityCompat;
 public class PermissionsUtil {
 
     @TargetApi(16)
+    public static boolean checkPermissions(Context ctx, String... permissions) {
+        boolean result = true;
+        if(ctx == null){
+            return false;
+        }
+        if(permissions != null) {
+            for (String p : permissions) {
+                if (ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    @TargetApi(16)
     public static boolean requestPermissionsIfNeed(Activity ctx, int requestCode, String... permissions) {
         boolean result = true;
         if(ctx == null){
             return false;
         }
-        for(String p : permissions){
-            if(ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED){
-                result = false;
-                askPermissions(ctx, requestCode, permissions);
+        if(permissions != null) {
+            for (String p : permissions) {
+                if (ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+                    result = false;
+                    askPermissions(ctx, requestCode, permissions);
+                }
             }
         }
         return result;

@@ -4,6 +4,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
+import com.mdgd.commons.contract.progress.IProgressView;
 import com.mdgd.commons.resources.R;
 
 /**
@@ -34,19 +35,28 @@ public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresente
     }
 
     @Override
-    public void showProgress() {
-        super.showProgress();
-        if(swipe != null) {
-            swipe.setRefreshing(true);
-        }
-    }
+    protected IProgressView createProgressView(String title, String message) {
+        return new IProgressView() {
+            @Override
+            public void show() {
+                swipe.setRefreshing(true);
+            }
 
-    @Override
-    public void hideProgress() {
-        super.hideProgress();
-        if(swipe != null) {
-            swipe.setRefreshing(false);
-        }
+            @Override
+            public boolean isShowing() {
+                return swipe.isRefreshing();
+            }
+
+            @Override
+            public void dismiss() {
+                swipe.setRefreshing(false);
+            }
+
+            @Override
+            public void cancel() {
+                swipe.setRefreshing(false);
+            }
+        };
     }
 
     @Override

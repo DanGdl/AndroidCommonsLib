@@ -20,6 +20,7 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 
 public abstract class CommonActivity<T extends ViewContract.IPresenter> extends Activity
         implements ViewContract.IView {
+    private boolean hasProgress = true;
     private boolean onForeground = false;
     protected final T presenter;
     private IProgressView progress;
@@ -56,9 +57,23 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         super.onStop();
     }
 
+    @Override
+    public boolean hasProgress() {
+        return hasProgress;
+    }
+
+    public void setHasProgress(boolean hasProgress) {
+        this.hasProgress = hasProgress;
+    }
+
     @TargetApi(16)
     protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
         return PermissionsUtil.requestPermissionsIfNeed(this, requestCode, permissions);
+    }
+
+    @Override
+    public void showProgress(int titleRes, int messageRes) {
+        showProgress(getString(titleRes), getString(messageRes));
     }
 
     @Override

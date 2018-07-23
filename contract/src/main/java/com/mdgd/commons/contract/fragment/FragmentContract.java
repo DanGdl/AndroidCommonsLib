@@ -1,43 +1,20 @@
 package com.mdgd.commons.contract.fragment;
 
+import com.mdgd.commons.contract.IToast;
+import com.mdgd.commons.contract.progress.IProgressContainer;
+
 public class FragmentContract {
 
-    public interface IHost {
-
-        void showProgress();
-
-        void hideProgress();
+    public interface IHost extends IProgressContainer, IToast {
 
         void finish();
 
         void onBackPressed();
-
-        void showToast(int msgRes);
-
-        void showToast(int msgRes, String query);
     }
 
     public interface IPresenter {}
 
-    public interface IFragment {
+    public interface IFragment extends IProgressContainer {}
 
-        boolean hasProgress();
-
-        void showProgress();
-
-        void hideProgress();
-    }
-
-    public interface IView {
-
-        boolean hasProgress();
-
-        void showProgress();
-
-        void hideProgress();
-
-        void showToast(int msgRes);
-
-        void showToast(int msgRes, String query);
-    }
+    public interface IView extends IProgressContainer, IToast {}
 }

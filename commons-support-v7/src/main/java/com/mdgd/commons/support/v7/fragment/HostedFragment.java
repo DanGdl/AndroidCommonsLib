@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
+import com.mdgd.commons.contract.progress.IProgressView;
+import com.mdgd.commons.contract.progress.ProgressDialogWrapper;
 import com.mdgd.commons.utilities.PermissionsUtil;
 
 /**
@@ -23,6 +25,8 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y extends FragmentContract.IHost> extends Fragment
         implements FragmentContract.IFragment, FragmentContract.IView {
     private boolean hasProgress = false;
+    private boolean onForeground = false;
+    private IProgressView progress;
     protected final X presenter;
     protected Y host;
 
@@ -61,18 +65,54 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     }
 
     @Override
-    @CallSuper
+    public void onResume() {
+        super.onResume();
+        onForeground = true;
+    }
+
+    @Override
+    public void onPause(){
+        onForeground = false;
+        super.onPause();
+    }
+
+    @Override
     public void showProgress() {
-        if(!hasProgress() && host != null){
-            host.showProgress();
+        showProgress("", "");
+    }
+
+    @Override
+    public void showProgress(int titleRes, int messageRes) {
+        showProgress(getString(titleRes), getString(messageRes));
+    }
+
+    @Override
+    @CallSuper
+    public void showProgress(String title, String message) {
+        try {
+            if (progress == null) {
+                progress = createProgressView(title, message);
+            }
+
+            if (onForeground && !progress.isShowing()) {
+                progress.show();
+            }
         }
+        catch (Throwable e){
+            e.printStackTrace();
+        }
+    }
+
+    protected IProgressView createProgressView(String title, String message) {
+        return new ProgressDialogWrapper(getActivity(), title, message);
     }
 
     @Override
     @CallSuper
     public void hideProgress() {
-        if(!hasProgress() && host != null){
-            host.hideProgress();
+        if(progress != null && progress.isShowing()){
+            progress.dismiss();
+            progress = null;
         }
     }
 

@@ -20,6 +20,7 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 
 public abstract class CommonActivity<T extends ViewContract.IPresenter> extends AppCompatActivity
         implements ViewContract.IView {
+    private boolean hasProgress = true;
     private boolean onForeground = false;
     protected T presenter;
     private IProgressView progress;
@@ -62,8 +63,22 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     @Override
+    public boolean hasProgress() {
+        return hasProgress;
+    }
+
+    public void setHasProgress(boolean hasProgress) {
+        this.hasProgress = hasProgress;
+    }
+
+    @Override
     public void showProgress(){
         showProgress("", "");
+    }
+
+    @Override
+    public void showProgress(int titleRes, int messageRes) {
+        showProgress(getString(titleRes), getString(messageRes));
     }
 
     @Override

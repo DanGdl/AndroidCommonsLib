@@ -14,41 +14,38 @@ import android.support.v4.app.ActivityCompat;
 public class PermissionsUtil {
 
     @TargetApi(16)
-    public static boolean checkPermissions(Context ctx, String... permissions) {
-        boolean result = true;
-        if(ctx == null){
-            return false;
-        }
-        if(permissions != null) {
-            for (String p : permissions) {
-                if (ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
-                    result = false;
-                    break;
-                }
-            }
-        }
-        return result;
+    public static boolean checkPermissions(final Context ctx, final String... permissions) {
+        return checkPermissionAndExec(ctx, null, permissions);
     }
 
     @TargetApi(16)
-    public static boolean requestPermissionsIfNeed(Activity ctx, int requestCode, String... permissions) {
-        boolean result = true;
+    public static boolean requestPermissionsIfNeed(final Activity ctx, final int requestCode, final String... permissions) {
+        return checkPermissionAndExec(ctx, new IPermissionCmd() {
+            @Override
+            public void exec(final String permission) {
+                ActivityCompat.requestPermissions(ctx, new String[]{permission}, requestCode);
+            }
+        } , permissions);
+    }
+
+    @TargetApi(16)
+    private static boolean checkPermissionAndExec(final Context ctx, final IPermissionCmd cmd, final String... permissions) {
         if(ctx == null){
             return false;
         }
-        if(permissions != null) {
-            for (String p : permissions) {
-                if (ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
-                    result = false;
-                    askPermissions(ctx, requestCode, permissions);
+        if(permissions == null){
+            return true;
+        }
+        boolean result = true;
+        for (String p : permissions) {
+            if (ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+                result = false;
+                if(cmd != null){
+                    cmd.exec(p);
                 }
             }
         }
         return result;
-    }
-
-    private static void askPermissions(Activity ctx, int requestCode, String[] permissions) {
-        ActivityCompat.requestPermissions(ctx, permissions, requestCode);
     }
 
     public static boolean areAllPermissionsGranted(int[] grantResults) {

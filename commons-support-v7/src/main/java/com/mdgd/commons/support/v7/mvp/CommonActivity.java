@@ -62,6 +62,11 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         return PermissionsUtil.requestPermissionsIfNeed(this, requestCode, permissions);
     }
 
+    @TargetApi(16)
+    protected boolean hasPermissions(String... permissions) {
+        return PermissionsUtil.checkPermissions(this, permissions);
+    }
+
     @Override
     public boolean hasProgress() {
         return hasProgress;

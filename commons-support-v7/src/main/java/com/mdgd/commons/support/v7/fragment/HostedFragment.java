@@ -137,4 +137,9 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     protected boolean requestPermissionsIfNeed(int requestCode, String... permissions) {
         return PermissionsUtil.requestPermissionsIfNeed(getActivity(), requestCode, permissions);
     }
+
+    @TargetApi(16)
+    protected boolean hasPermissions(String... permissions) {
+        return PermissionsUtil.checkPermissions(getActivity(), permissions);
+    }
 }

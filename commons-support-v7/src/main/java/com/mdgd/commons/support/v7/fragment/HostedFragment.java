@@ -94,7 +94,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
                 progress = createProgressView(title, message);
             }
 
-            if (onForeground && !progress.isShowing()) {
+            if (onForeground && !progress.isShowing() && host != null && !host.isFinishing()) {
                 progress.show();
             }
         }
@@ -110,7 +110,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @Override
     @CallSuper
     public void hideProgress() {
-        if(progress != null && progress.isShowing()){
+        if(progress != null && progress.isShowing() && host != null && !host.isFinishing()){
             progress.dismiss();
             progress = null;
         }

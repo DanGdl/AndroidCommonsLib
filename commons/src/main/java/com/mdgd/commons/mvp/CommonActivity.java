@@ -108,7 +108,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @Override
     public void hideProgress(){
-        if(progress != null && progress.isShowing()){
+        if(progress != null && progress.isShowing() && !isFinishing()){
             progress.dismiss();
             progress = null;
         }

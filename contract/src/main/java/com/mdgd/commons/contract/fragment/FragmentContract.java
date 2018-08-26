@@ -10,6 +10,8 @@ public class FragmentContract {
         void finish();
 
         void onBackPressed();
+
+        boolean isFinishing();
     }
 
     public interface IPresenter {}

@@ -12,6 +12,7 @@ import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -26,90 +27,115 @@ import java.io.FileOutputStream;
 
 public class TakePictureDelegate {
 
-    private final Activity CONTEXT;
-    private final ImageFormats IMAGE_FORMAT;
+    private final Activity ctx;
+    private final AppCompatActivity ctxSupport;
+    private final ImageFormats imgFormat;
 
-    private final ISavePictureDirectory FUN_IMAGE_DIR;
-    private final ISavePicturePath FUN_IMAGE_PATH ;
-    private final String IMAGE_PATH;
+    private final ISavePictureDirectory funcImageDir;
+    private final ISavePicturePath funcImagePath;
+    private final String imagePath;
 
-    private final int PERMISSIONS_REQUEST_SELECT;
-    private final int REQUEST_IMAGE_CAPTURE;
-    private final int PERMISSIONS_REQUEST_CAPTURE;
-    private final int REQUEST_SELECT_PICTURE;
+    private final int PRC_SELECT;
+    private final int RC_SELECT;
+    private final int PRC_CAPTURE;
+    private final int RC_CAPTURE;
 
-    private final String CHOOSER_TITLE;
-    private final IOnImageObtained ON_IMAGE_OBTAINED;
+    private final String chooserDialogTitle;
+    private final IOnImageObtained funcOnImageObtained;
 
     private TakePictureDelegate(Activity activity, ImageFormats format, String savePicDirPath,
                                 ISavePicturePath savePicDirPathFun, ISavePictureDirectory savePicDir,
                                 int rcPermissionCamera, int rcPermissionSelect, int requestCodeCapture,
                                 int requestCodeSelect, IOnImageObtained onImageObtained, String chooserTitle) {
-        this.CONTEXT = activity;
-        this.IMAGE_FORMAT = format;
+        this.ctx = activity;
+        this.ctxSupport = null;
+        this.imgFormat = format;
 
-        this.IMAGE_PATH = savePicDirPath;
-        this.FUN_IMAGE_PATH = savePicDirPathFun;
-        this.FUN_IMAGE_DIR = savePicDir;
+        this.imagePath = savePicDirPath;
+        this.funcImagePath = savePicDirPathFun;
+        this.funcImageDir = savePicDir;
 
-        PERMISSIONS_REQUEST_CAPTURE = rcPermissionCamera;
-        REQUEST_IMAGE_CAPTURE = rcPermissionSelect;
+        PRC_CAPTURE = rcPermissionCamera;
+        RC_CAPTURE = rcPermissionSelect;
 
-        PERMISSIONS_REQUEST_SELECT = requestCodeSelect;
-        REQUEST_SELECT_PICTURE = requestCodeCapture;
+        PRC_SELECT = requestCodeSelect;
+        RC_SELECT = requestCodeCapture;
 
-        ON_IMAGE_OBTAINED = onImageObtained;
-        CHOOSER_TITLE = chooserTitle == null ? getChooserTitle() : chooserTitle;
+        funcOnImageObtained = onImageObtained;
+        chooserDialogTitle = chooserTitle == null ? getChooserTitle() : chooserTitle;
+    }
+
+    private TakePictureDelegate(AppCompatActivity activity, ImageFormats format, String savePicDirPath,
+                                ISavePicturePath savePicDirPathFun, ISavePictureDirectory savePicDir,
+                                int rcPermissionCamera, int rcPermissionSelect, int requestCodeCapture,
+                                int requestCodeSelect, IOnImageObtained onImageObtained, String chooserTitle) {
+        this.ctx = null;
+        this.ctxSupport = activity;
+        this.imgFormat = format;
+
+        this.imagePath = savePicDirPath;
+        this.funcImagePath = savePicDirPathFun;
+        this.funcImageDir = savePicDir;
+
+        PRC_CAPTURE = rcPermissionCamera;
+        RC_CAPTURE = rcPermissionSelect;
+
+        PRC_SELECT = requestCodeSelect;
+        RC_SELECT = requestCodeCapture;
+
+        funcOnImageObtained = onImageObtained;
+        chooserDialogTitle = chooserTitle == null ? getChooserTitle() : chooserTitle;
+    }
+
+    private Activity getActivity(){
+        return ctx == null ? ctxSupport : ctx;
     }
 
     public void makePicture() {
-        if (CONTEXT.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                CONTEXT.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                CONTEXT.checkPermission(Manifest.permission.CAMERA, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+        if (getActivity().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
+                getActivity().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
+                getActivity().checkPermission(Manifest.permission.CAMERA, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(CONTEXT,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                    PERMISSIONS_REQUEST_CAPTURE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PRC_CAPTURE);
             return;
         }
-        PackageManager pManager = CONTEXT.getPackageManager();
+        final PackageManager pManager = getActivity().getPackageManager();
         boolean hasCamera = pManager.hasSystemFeature(PackageManager.FEATURE_CAMERA);
         if (!hasCamera) {
-            Toast.makeText(CONTEXT, R.string.no_camera_on_device, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_camera_on_device, Toast.LENGTH_SHORT).show();
             return;
         }
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(pManager) != null) {
-            CONTEXT.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            getActivity().startActivityForResult(takePictureIntent, RC_CAPTURE);
         }
     }
 
     public void selectFromGallery() {
-        if (CONTEXT.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CONTEXT, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_SELECT);
+        if (getActivity().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PRC_SELECT);
             return;
         }
 
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        CONTEXT.startActivityForResult(Intent.createChooser(intent, CHOOSER_TITLE), REQUEST_SELECT_PICTURE);
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*");
+        getActivity().startActivityForResult(Intent.createChooser(intent, chooserDialogTitle), RC_SELECT);
     }
 
     protected String getChooserTitle(){
-        return CONTEXT.getString(R.string.select_image);
+        return getActivity().getString(R.string.select_image);
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CAPTURE) {
-            boolean permissionsGranted = areAllPermissionsGranted(grantResults);
+        if (requestCode == PRC_CAPTURE) {
+            final boolean permissionsGranted = areAllPermissionsGranted(grantResults);
             if (permissionsGranted) {
                 makePicture();
             }
         }
-        else if (requestCode == PERMISSIONS_REQUEST_SELECT) {
-            boolean permissionsGranted = areAllPermissionsGranted(grantResults);
+        else if (requestCode == PRC_SELECT) {
+            final boolean permissionsGranted = areAllPermissionsGranted(grantResults);
             if (permissionsGranted) {
                 selectFromGallery();
             }
@@ -127,35 +153,35 @@ public class TakePictureDelegate {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RC_CAPTURE && resultCode == Activity.RESULT_OK) {
             fetchNewImage(data);
         }
-        else if (requestCode == REQUEST_SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == RC_SELECT && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
-                if(ON_IMAGE_OBTAINED != null) {
-                    ON_IMAGE_OBTAINED.onImageObtained(data.getData());
+                if(funcOnImageObtained != null) {
+                    funcOnImageObtained.onImageObtained(data.getData());
                 }
             }
         }
     }
 
     protected void fetchNewImage(Intent data) {
-        Bundle extras = data.getExtras();
-        Bitmap photo = (Bitmap) extras.get("data");
+        final Bundle extras = data.getExtras();
+        final Bitmap photo = (Bitmap) extras.get("data");
         try {
-            File dir = getSavePictureFile();
+            final File dir = getSavePictureFile();
             boolean b = dir.exists() || dir.mkdirs();
 
-            File file = new File(dir,System.currentTimeMillis() + IMAGE_FORMAT.suffix);
+            final File file = new File(dir,System.currentTimeMillis() + imgFormat.suffix);
             b = file.exists() || file.createNewFile();
 
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-            photo.compress(IMAGE_FORMAT.format, 100, bos);
+            final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+            photo.compress(imgFormat.format, 100, bos);
             bos.flush();
             bos.close();
 
-            if(ON_IMAGE_OBTAINED != null) {
-                ON_IMAGE_OBTAINED.onImageObtained(Uri.fromFile(file));
+            if(funcOnImageObtained != null) {
+                funcOnImageObtained.onImageObtained(Uri.fromFile(file));
             }
         }
         catch (Exception e) {
@@ -164,14 +190,14 @@ public class TakePictureDelegate {
     }
 
     private File getSavePictureFile() {
-        if(FUN_IMAGE_DIR != null){
-            return FUN_IMAGE_DIR.getSavePictureDirectory();
+        if(funcImageDir != null){
+            return funcImageDir.getSavePictureDirectory();
         }
-        else if(FUN_IMAGE_PATH != null){
-            return new File(FUN_IMAGE_PATH.getSavePictureDirectoryPath());
+        else if(funcImagePath != null){
+            return new File(funcImagePath.getSavePictureDirectoryPath());
         }
-        else if(!TextUtils.isEmpty(IMAGE_PATH)){
-            return new File(IMAGE_PATH);
+        else if(!TextUtils.isEmpty(imagePath)){
+            return new File(imagePath);
         }
         else {
             return new File(Environment.getDataDirectory() + "/Pictures");
@@ -195,6 +221,7 @@ public class TakePictureDelegate {
     public static class Builder {
 
         private final Activity activity;
+        private final AppCompatActivity activitySupport;
         private ImageFormats format = ImageFormats.JPEG;
         private String savePicDirPath;
         private ISavePicturePath savePicDirPathFun;
@@ -208,6 +235,12 @@ public class TakePictureDelegate {
 
         public Builder(Activity activity){
             this.activity = activity;
+            this.activitySupport = null;
+        }
+
+        public Builder(AppCompatActivity activity){
+            this.activitySupport = activity;
+            this.activity = null;
         }
 
         /**
@@ -291,8 +324,14 @@ public class TakePictureDelegate {
         }
 
         public TakePictureDelegate build(){
-            return new TakePictureDelegate(activity, format, savePicDirPath, savePicDirPathFun,
-                    savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained, chooserTitle);
+            if(activity == null){
+                return new TakePictureDelegate(activitySupport, format, savePicDirPath, savePicDirPathFun,
+                        savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained, chooserTitle);
+            }
+            else {
+                return new TakePictureDelegate(activity, format, savePicDirPath, savePicDirPathFun,
+                        savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained, chooserTitle);
+            }
         }
     }
 }

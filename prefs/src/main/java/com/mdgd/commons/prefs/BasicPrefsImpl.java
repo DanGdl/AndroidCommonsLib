@@ -14,11 +14,11 @@ public abstract class BasicPrefsImpl {
 
     protected final Context ctx;
 
-    BasicPrefsImpl(Context ctx) {
+    public BasicPrefsImpl(Context ctx) {
         this.ctx = ctx;
     }
 
-    abstract String getDefaultPrefsFileName();
+    public abstract String getDefaultPrefsFileName();
 
     protected SharedPreferences getPrefs() {
         return getPrefs(getDefaultPrefsFileName());

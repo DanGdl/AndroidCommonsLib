@@ -10,7 +10,7 @@ import java.util.Set;
  * Created by Owner
  * on 08/07/2018.
  */
-abstract class BasicPrefsImpl {
+public abstract class BasicPrefsImpl {
 
     protected final Context ctx;
 

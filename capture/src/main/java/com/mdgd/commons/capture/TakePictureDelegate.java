@@ -8,13 +8,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.mdgd.commons.utilities.PermissionsUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -92,30 +92,26 @@ public class TakePictureDelegate {
     }
 
     public void makePicture() {
-        if (getActivity().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                getActivity().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED ||
-                getActivity().checkPermission(Manifest.permission.CAMERA, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PRC_CAPTURE);
+        if (PermissionsUtil.requestPermissionsIfNeedNew(getActivity(), PRC_CAPTURE,
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA)) {
             return;
         }
         final PackageManager pManager = getActivity().getPackageManager();
-        boolean hasCamera = pManager.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        final boolean hasCamera = pManager.hasSystemFeature(PackageManager.FEATURE_CAMERA);
         if (!hasCamera) {
             Toast.makeText(getActivity(), R.string.no_camera_on_device, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(pManager) != null) {
             getActivity().startActivityForResult(takePictureIntent, RC_CAPTURE);
         }
     }
 
     public void selectFromGallery() {
-        if (getActivity().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, android.os.Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PRC_SELECT);
+        if (PermissionsUtil.requestPermissionsIfNeedNew(getActivity(), PRC_SELECT, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return;
         }
 
@@ -128,35 +124,23 @@ public class TakePictureDelegate {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PRC_CAPTURE) {
-            final boolean permissionsGranted = areAllPermissionsGranted(grantResults);
-            if (permissionsGranted) {
-                makePicture();
-            }
+        final boolean permissionsGranted = PermissionsUtil.areAllPermissionsGranted(grantResults);
+        if (requestCode == PRC_CAPTURE && permissionsGranted) {
+            makePicture();
         }
-        else if (requestCode == PRC_SELECT) {
-            final boolean permissionsGranted = areAllPermissionsGranted(grantResults);
-            if (permissionsGranted) {
-                selectFromGallery();
-            }
+        else if (requestCode == PRC_SELECT && permissionsGranted) {
+            selectFromGallery();
         }
-    }
-
-    private boolean areAllPermissionsGranted(int[] grantResults) {
-        boolean result = false;
-        for (int i : grantResults) {
-            if (i == PackageManager.PERMISSION_GRANTED) {
-                result = true;
-            }
-        }
-        return result;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_CAPTURE && resultCode == Activity.RESULT_OK) {
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        if (requestCode == RC_CAPTURE) {
             fetchNewImage(data);
         }
-        else if (requestCode == RC_SELECT && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == RC_SELECT) {
             if (data != null && data.getData() != null) {
                 if(funcOnImageObtained != null) {
                     funcOnImageObtained.onImageObtained(data.getData());

@@ -13,11 +13,17 @@ import android.support.v4.app.ActivityCompat;
  */
 public class PermissionsUtil {
 
+    /**
+     * return true if has permission, false other way
+     */
     @TargetApi(16)
     public static boolean checkPermissions(final Context ctx, final String... permissions) {
         return checkPermissionAndExec(ctx, null, permissions);
     }
 
+    /**
+     * return true if has permission, false other way
+     */
     @TargetApi(16)
     public static boolean requestPermissionsIfNeed(final Activity ctx, final int requestCode, final String... permissions) {
         return checkPermissionAndExec(ctx, new IPermissionCmd() {
@@ -28,13 +34,23 @@ public class PermissionsUtil {
         } , permissions);
     }
 
+    /**
+     * return true if permission requested, false other way
+     */
+    @TargetApi(16)
+    public static boolean requestPermissionsIfNeedNew(final Activity ctx, final int requestCode, final String... permissions) {
+        return !checkPermissionAndExec(ctx, new IPermissionCmd() {
+            @Override
+            public void exec(final String permission) {
+                ActivityCompat.requestPermissions(ctx, new String[]{permission}, requestCode);
+            }
+        } , permissions);
+    }
+
     @TargetApi(16)
     private static boolean checkPermissionAndExec(final Context ctx, final IPermissionCmd cmd, final String... permissions) {
-        if(ctx == null){
+        if(ctx == null || permissions == null){
             return false;
-        }
-        if(permissions == null){
-            return true;
         }
         boolean result = true;
         for (String p : permissions) {

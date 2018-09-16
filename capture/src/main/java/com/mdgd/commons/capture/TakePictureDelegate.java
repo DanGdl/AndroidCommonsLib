@@ -92,31 +92,27 @@ public class TakePictureDelegate {
     }
 
     public void makePicture() {
-        if (PermissionsUtil.requestPermissionsIfNeedNew(getActivity(), PRC_CAPTURE,
-                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA)) {
-            return;
-        }
-        final PackageManager pManager = getActivity().getPackageManager();
-        final boolean hasCamera = pManager.hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        if (!hasCamera) {
-            Toast.makeText(getActivity(), R.string.no_camera_on_device, Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (PermissionsUtil.requestPermissionsIfNeed(getActivity(), PRC_CAPTURE, Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            final PackageManager pManager = getActivity().getPackageManager();
+            final boolean hasCamera = pManager.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+            if (!hasCamera) {
+                Toast.makeText(getActivity(), R.string.no_camera_on_device, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(pManager) != null) {
-            getActivity().startActivityForResult(takePictureIntent, RC_CAPTURE);
+            final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(pManager) != null) {
+                getActivity().startActivityForResult(takePictureIntent, RC_CAPTURE);
+            }
         }
     }
 
     public void selectFromGallery() {
-        if (PermissionsUtil.requestPermissionsIfNeedNew(getActivity(), PRC_SELECT, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            return;
+        if (PermissionsUtil.requestPermissionsIfNeed(getActivity(), PRC_SELECT, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            final Intent intent = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*");
+            getActivity().startActivityForResult(Intent.createChooser(intent, chooserDialogTitle), RC_SELECT);
         }
-
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*");
-        getActivity().startActivityForResult(Intent.createChooser(intent, chooserDialogTitle), RC_SELECT);
     }
 
     protected String getChooserTitle(){

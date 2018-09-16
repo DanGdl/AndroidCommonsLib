@@ -26,10 +26,10 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
 
         container = findViewById(getFragmentContainerId());
         if(savedInstanceState == null) {
-            addFragment(getFirstFragment());
+                addFragment(getFirstFragment());
         }
         else {
-            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            final List<Fragment> fragments = getSupportFragmentManager().getFragments();
             if(fragments == null || fragments.isEmpty()){
                 addFragment(getFirstFragment());
             }

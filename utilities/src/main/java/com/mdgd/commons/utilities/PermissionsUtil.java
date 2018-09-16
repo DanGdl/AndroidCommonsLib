@@ -34,19 +34,6 @@ public class PermissionsUtil {
         } , permissions);
     }
 
-    /**
-     * return true if permission requested, false other way
-     */
-    @TargetApi(16)
-    public static boolean requestPermissionsIfNeedNew(final Activity ctx, final int requestCode, final String... permissions) {
-        return !checkPermissionAndExec(ctx, new IPermissionCmd() {
-            @Override
-            public void exec(final String permission) {
-                ActivityCompat.requestPermissions(ctx, new String[]{permission}, requestCode);
-            }
-        } , permissions);
-    }
-
     @TargetApi(16)
     private static boolean checkPermissionAndExec(final Context ctx, final IPermissionCmd cmd, final String... permissions) {
         if(ctx == null || permissions == null){

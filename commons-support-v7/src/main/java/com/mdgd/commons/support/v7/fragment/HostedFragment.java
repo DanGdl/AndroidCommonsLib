@@ -46,14 +46,14 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(getLayoutResId(), container, false);
+        final View v = inflater.inflate(getLayoutResId(), container, false);
         initViews(v);
         return v;
     }
 
     protected abstract int getLayoutResId();
 
-    protected abstract void initViews(View v);
+    protected abstract void initViews(final View v);
 
     @Override
     public boolean hasProgress() {
@@ -118,7 +118,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
 
     @Override
     public void showToast(int msgRes) {
-        Context ctx = getActivity();
+        final Context ctx = getActivity();
         if(ctx != null) {
             Toast.makeText(ctx, msgRes, Toast.LENGTH_LONG).show();
         }
@@ -126,7 +126,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
 
     @Override
     public void showToast(int msgRes, String query) {
-        Context ctx = getActivity();
+        final Context ctx = getActivity();
         if(ctx != null) {
             Toast.makeText(ctx, getString(msgRes, query), Toast.LENGTH_LONG).show();
         }

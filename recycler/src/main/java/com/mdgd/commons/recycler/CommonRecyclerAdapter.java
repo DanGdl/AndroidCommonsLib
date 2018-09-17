@@ -45,7 +45,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Comm
             setItems(items);
         }
         else{
-            int start = this.items.size();
+            final  int start = this.items.size();
             this.items.addAll(items);
             notifyItemRangeInserted(start, items.size());
         }

@@ -26,17 +26,25 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
 
         container = findViewById(getFragmentContainerId());
         if(savedInstanceState == null) {
-                addFragment(getFirstFragment());
+            addFirstFragment();
         }
         else {
             final List<Fragment> fragments = getSupportFragmentManager().getFragments();
             if(fragments == null || fragments.isEmpty()){
-                addFragment(getFirstFragment());
+                addFirstFragment();
             }
             else {
                 restoreFragments(fragments);
             }
         }
+    }
+
+    private void addFirstFragment() {
+        final Fragment f = getFirstFragment();
+        if(f == null){
+            return;
+        }
+        addFragment(f);
     }
 
     protected void restoreFragments(List<Fragment> fragments){}

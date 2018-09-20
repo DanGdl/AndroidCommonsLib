@@ -1,6 +1,7 @@
 package com.mdgd.commons.recycler;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
@@ -24,7 +25,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Comm
     }
 
     @Override
-    public void onBindViewHolder(CommonViewHolder<T> holder, int position) {
+    public void onBindViewHolder(@NonNull CommonViewHolder<T> holder, int position) {
         if(items != null && position >= 0 && position < items.size()) {
             holder.bindItem(items.get(position), position);
         }

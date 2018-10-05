@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion project.compile_ver
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion project.min_ver
+        targetSdkVersion project.target_ver
+        versionCode project.ver_code
+        versionName "$project.ver_name"
     }
 
     buildTypes {
@@ -24,6 +24,6 @@ dependencies {
     implementation project(':commons-support-v7')
     implementation project(':resources')
 
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "com.android.support:recyclerview-v7:$support_ver"
+    implementation "com.android.support:appcompat-v7:$support_ver"
 }

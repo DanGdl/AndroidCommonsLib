@@ -1,7 +1,7 @@
 package com.mdgd.commons.injection;
 
 /**
- * Created by Owner
+ * Created by Max
  * on 28/06/2018.
  */
 public interface IInitAction<T> {

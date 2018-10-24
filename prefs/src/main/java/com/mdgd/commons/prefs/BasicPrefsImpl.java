@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Owner
+ * Created by Max
  * on 08/07/2018.
  */
 public abstract class BasicPrefsImpl {

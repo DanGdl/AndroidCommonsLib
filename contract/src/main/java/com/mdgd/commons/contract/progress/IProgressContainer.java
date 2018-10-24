@@ -1,7 +1,7 @@
 package com.mdgd.commons.contract.progress;
 
 /**
- * Created by Owner
+ * Created by Max
  * on 23/07/2018.
  */
 public interface IProgressContainer {

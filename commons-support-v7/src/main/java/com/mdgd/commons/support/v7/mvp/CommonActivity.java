@@ -14,7 +14,7 @@ import com.mdgd.commons.resources.R;
 import com.mdgd.commons.utilities.PermissionsUtil;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 01/01/2018.
  */
 

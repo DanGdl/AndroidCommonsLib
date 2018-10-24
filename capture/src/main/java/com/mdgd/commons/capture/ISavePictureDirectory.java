@@ -3,7 +3,7 @@ package com.mdgd.commons.capture;
 import java.io.File;
 
 /**
- * Created by Owner
+ * Created by Max
  * on 08/05/2018.
  */
 public interface ISavePictureDirectory {

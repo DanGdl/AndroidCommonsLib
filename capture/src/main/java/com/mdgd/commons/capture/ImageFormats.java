@@ -3,7 +3,7 @@ package com.mdgd.commons.capture;
 import android.graphics.Bitmap;
 
 /**
- * Created by Owner
+ * Created by Max
  * on 29/04/2018.
  */
 public enum ImageFormats {

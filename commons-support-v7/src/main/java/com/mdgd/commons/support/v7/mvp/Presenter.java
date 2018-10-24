@@ -3,7 +3,7 @@ package com.mdgd.commons.support.v7.mvp;
 import com.mdgd.commons.contract.mvp.ViewContract;
 
 /**
- * Created by Dan
+ * Created by Max
  * on 08/10/2017.
  */
 

@@ -3,17 +3,15 @@ package com.mdgd.commons.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+/**
+ * Created by Max
+ * on 05/09/2018.
+ */
 public interface ICursorParser<T> {
 
-    @NotNull
-    T formCursor(@NotNull Cursor c);
+    T formCursor(Cursor c);
 
-    @NotNull
-    ContentValues toContentValues(@NotNull T item);
+    ContentValues toContentValues(T item);
 
-    @NotNull
-    ContentValues toContentValues(@Nullable ContentValues cv, @NotNull T item);
+    ContentValues toContentValues(ContentValues cv, T item);
 }

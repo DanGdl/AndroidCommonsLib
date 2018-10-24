@@ -3,7 +3,7 @@ package com.mdgd.commons.injection;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by Owner
+ * Created by Max
  * on 15/07/2018.
  */
 public abstract class BasicProvider {

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * Created by Owner
  * on 05/09/2018.
  */
-public abstract class SqLiteWrapper<T> implements ICursorParser<T> {
+public abstract class CursorParser<T> implements ICursorParser<T> {
 
     protected String get(@NotNull Cursor c, @NotNull String columnName, @Nullable String defValue) {
         final int columnIndex = c.getColumnIndex(columnName);

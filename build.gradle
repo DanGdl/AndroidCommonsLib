@@ -6,7 +6,7 @@ buildscript {
     ext.gcm_ver = '16.0.0'
 
     project.ext {
-        min_ver = 19
+        min_ver = 17
         target_ver = 28
         compile_ver = 28
         ver_code = 1

@@ -9,9 +9,9 @@ import android.database.Cursor;
  */
 public interface ICursorParser<T> {
 
-    T formCursor(Cursor c);
+    T fromCursor(Cursor c);
 
     ContentValues toContentValues(T item);
 
-    ContentValues toContentValues(ContentValues cv, T item);
+    ContentValues toContentValues(T item, ContentValues cv);
 }

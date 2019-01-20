@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
 import com.mdgd.commons.contract.progress.IProgressView;
-import com.mdgd.commons.resources.R;
 
 /**
  * Created by Max

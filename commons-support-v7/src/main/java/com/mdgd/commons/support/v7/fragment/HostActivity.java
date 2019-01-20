@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
 import com.mdgd.commons.contract.mvp.ViewContract;
-import com.mdgd.commons.resources.R;
+import com.mdgd.commons.support.v7.R;
 import com.mdgd.commons.support.v7.mvp.CommonActivity;
 
 import java.util.List;

@@ -19,7 +19,6 @@ android {
 }
 
 dependencies {
-    implementation project(':resources')
     implementation project(':contract')
     implementation project(':utilities')
 

@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.mdgd.commons.contract.mvp.ViewContract;
 import com.mdgd.commons.contract.progress.IProgressView;
 import com.mdgd.commons.contract.progress.ProgressDialogWrapper;
-import com.mdgd.commons.resources.R;
+import com.mdgd.commons.support.v7.R;
 import com.mdgd.commons.utilities.PermissionsUtil;
 
 /**

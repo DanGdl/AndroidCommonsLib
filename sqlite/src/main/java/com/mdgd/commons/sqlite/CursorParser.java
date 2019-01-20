@@ -46,6 +46,6 @@ public abstract class CursorParser<T> implements ICursorParser<T> {
 
     @Override
     public ContentValues toContentValues(T item) {
-        return toContentValues(null, item);
+        return toContentValues(item, null);
     }
 }

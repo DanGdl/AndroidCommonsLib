@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
 import com.mdgd.commons.recycler.CommonRecyclerAdapter;
-import com.mdgd.commons.resources.R;
 import com.mdgd.commons.support.v7.fragment.HostedFragment;
 
 /**

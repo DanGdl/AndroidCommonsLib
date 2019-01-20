@@ -22,7 +22,6 @@ dependencies {
     implementation project(':contract')
     implementation project(':recycler')
     implementation project(':commons-support-v7')
-    implementation project(':resources')
 
     implementation "com.android.support:recyclerview-v7:$support_ver"
     implementation "com.android.support:appcompat-v7:$support_ver"

@@ -2,6 +2,7 @@ package com.mdgd.commons.support.v7.mvp;
 
 import android.annotation.TargetApi;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -89,13 +90,8 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     @Override
     public void showProgress(String title, String message) {
         try {
-            if (progress == null) {
-                progress = createProgressView(title, message);
-            }
-
-            if (onForeground && !progress.isShowing() && !isFinishing()) {
-                progress.show();
-            }
+            if (progress == null) progress = createProgressView(title, message);
+            if (onForeground && !progress.isShowing() && !isFinishing()) progress.show();
         }
         catch (Throwable e){
             e.printStackTrace();
@@ -131,11 +127,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @Deprecated
     protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
-        if(addToStack){
-            transaction.addToBackStack(backStackTag);
-        }
-        transaction.commit();
+        getTransaction(addToStack, backStackTag).replace(getFragmentContainerId(), fragment).commit();
     }
 
     @Deprecated
@@ -144,11 +136,17 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     protected void addFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), fragment);
-        if(addToStack){
-            transaction.addToBackStack(backStackTag);
+        if(fragment instanceof DialogFragment) {
+            ((DialogFragment) fragment).show(getSupportFragmentManager(), backStackTag);
+        } else {
+            getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
         }
-        transaction.commit();
+    }
+
+    protected FragmentTransaction getTransaction(boolean addToStack, String backStackTag) {
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (addToStack) transaction.addToBackStack(backStackTag);
+        return transaction;
     }
 
     protected void addFragment(Fragment fragment) {
@@ -160,11 +158,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     protected void replaceFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), fragment);
-        if(addToStack){
-            transaction.addToBackStack(backStackTag);
-        }
-        transaction.commit();
+        getTransaction(addToStack, backStackTag).replace(getFragmentContainerId(), fragment).commit();
     }
 
     protected void replaceFragment(Fragment fragment) {
@@ -176,11 +170,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     protected void removeFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().remove(fragment);
-        if(addToStack){
-            transaction.addToBackStack(backStackTag);
-        }
-        transaction.commit();
+        getTransaction(addToStack, backStackTag).remove(fragment).commit();
     }
 
     protected void removeFragment(Fragment fragment) {

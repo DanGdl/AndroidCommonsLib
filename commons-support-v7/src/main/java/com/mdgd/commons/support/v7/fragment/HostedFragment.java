@@ -53,7 +53,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
 
     protected abstract int getLayoutResId();
 
-    protected abstract void initViews(final View v);
+    protected void initViews(final View v){}
 
     @Override
     public boolean hasProgress() {
@@ -90,13 +90,8 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @CallSuper
     public void showProgress(String title, String message) {
         try {
-            if (progress == null) {
-                progress = createProgressView(title, message);
-            }
-
-            if (onForeground && !progress.isShowing() && host != null && !host.isFinishing()) {
-                progress.show();
-            }
+            if (progress == null) progress = createProgressView(title, message);
+            if (onForeground && !progress.isShowing() && host != null && !host.isFinishing()) progress.show();
         }
         catch (Throwable e){
             e.printStackTrace();
@@ -119,17 +114,13 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @Override
     public void showToast(int msgRes) {
         final Context ctx = getActivity();
-        if(ctx != null) {
-            Toast.makeText(ctx, msgRes, Toast.LENGTH_LONG).show();
-        }
+        if(ctx != null) Toast.makeText(ctx, msgRes, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showToast(int msgRes, String query) {
         final Context ctx = getActivity();
-        if(ctx != null) {
-            Toast.makeText(ctx, getString(msgRes, query), Toast.LENGTH_LONG).show();
-        }
+        if(ctx != null) Toast.makeText(ctx, getString(msgRes, query), Toast.LENGTH_LONG).show();
     }
 
 

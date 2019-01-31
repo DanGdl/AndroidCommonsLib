@@ -22,6 +22,7 @@ public class ForegroundDelegate {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) builder.setPriority(notificationPriority);
         builder.setCategory(Notification.CATEGORY_SERVICE);
         builder.setSmallIcon(iconResId);
+        builder.setOngoing(true);
         builder.setContentTitle(ctx.getString(titleResId));
         builder.setContentText(ctx.getString(txtResId));
         return builder;

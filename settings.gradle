@@ -1,1 +1,3 @@
-include ':app', ':commons-support-v7', ':recycler', ':contract', ':capture', ':recycler-fragment-support-v7', ':services', ':tasks', ':utilities', ':sqlite', ':prefs', ':injection', ':foreground', ':permissions'
+include ':app', ':commons-support-v7', ':recycler', ':contract', ':capture',
+        ':recycler-fragment-support-v7', ':services', ':tasks', ':utilities', ':sqlite', ':prefs',
+        ':injection', ':foreground', ':permissions'

@@ -13,6 +13,7 @@ import com.mdgd.commons.injection.BasicProvider
 
 class ComponentProviderImpl(val ctx: Context): BasicProvider(), IComponentProvider {
 
+    // todo fixes
     override fun getRepo(): IRepo {
         return Repo(getNetwork(), getQuakesDB(), getPrefs())
     }

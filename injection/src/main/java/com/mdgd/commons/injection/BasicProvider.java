@@ -8,10 +8,8 @@ import java.lang.ref.WeakReference;
  */
 public abstract class BasicProvider {
 
-    protected WeakReference checkIfExists(WeakReference ref, IInitAction action) {
-        if(ref == null || ref.get() == null){
-            ref = new WeakReference<>(action.init());
-        }
+    protected <T> WeakReference<T> checkIfExists(WeakReference<T> ref, IInitAction<T> action) {
+        if(ref == null || ref.get() == null) ref = new WeakReference<>(action.init());
         return ref;
     }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector>
+    <!--<item android:state_checked="true" android:drawable="@drawable/ic_menu_top"/>-->
+    <!--<item android:state_checked="false" android:drawable="@drawable/ic_menu_bot"/>-->
+    <!--<item android:drawable="@drawable/ic_menu_bot"/>-->
+</selector>

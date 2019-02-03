@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">Commons</string>
+    <string name="app_name">EarthQuakes</string>
+    <string name="no_earthquake_implemented">Host activity must implement IEarthquakesFragmentHost</string>
+    <string name="quake_time">Quake Time</string>
+    <string name="quake_details">Magnitude %1$s \n %2$s \n %3$s</string>
+    <string name="shit">Shit happens! %1s</string>
+    <string name="empty"/>
+    <string name="quake_desc">Description</string>
+    <string name="date_time">Date and Time</string>
+    <string name="magnitude">Magnitude</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="from_magnitude">From magnitude</string>
+    <string name="to_magnitude">To magnitude</string>
+    <string name="time_zero">00:00</string>
+    <string name="hint_date">dd/MM/YYYY</string>
+    <string name="wait_please">Wait please…</string>
 </resources>

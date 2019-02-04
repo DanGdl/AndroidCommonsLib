@@ -1,5 +1,8 @@
 package com.mdgd.commons.injection;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -8,7 +11,7 @@ import java.lang.ref.WeakReference;
  */
 public abstract class BasicProvider {
 
-    protected <T> WeakReference<T> checkIfExists(WeakReference<T> ref, IInitAction<T> action) {
+    protected <T> WeakReference<T> checkIfExists(@Nullable WeakReference<T> ref, @NonNull IInitAction<T> action) {
         if(ref == null || ref.get() == null) ref = new WeakReference<>(action.init());
         return ref;
     }

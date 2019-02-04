@@ -1,6 +1,7 @@
 package com.mdgd.commons.sqlite;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Max
@@ -9,7 +10,7 @@ import android.content.ContentValues;
 public abstract class SqLiteWrapper<T> extends CursorParser<T> {
 
     @Override
-    public ContentValues toContentValues(T item) {
-        return toContentValues(item, null);
+    public ContentValues toContentValues(@NonNull T item) {
+        return toContentValues(item, new ContentValues());
     }
 }

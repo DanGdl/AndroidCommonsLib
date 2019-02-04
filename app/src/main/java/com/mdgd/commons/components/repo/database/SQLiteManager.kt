@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.mdgd.commons.dto.Quake
-import com.mdgd.commons.sqlite.SqLiteWrapper
+import com.mdgd.commons.sqlite.CursorParser
 import java.util.*
 
 /**
@@ -13,7 +13,7 @@ import java.util.*
  * on 30-Apr-17.
  */
 
-class SQLiteManager (context: Context): SqLiteWrapper<Quake>(), IDataBase {
+class SQLiteManager (context: Context): CursorParser<Quake>(), IDataBase {
 
 
     private val mDbHelper: DBHelper = DBHelper(context)
@@ -36,9 +36,9 @@ class SQLiteManager (context: Context): SqLiteWrapper<Quake>(), IDataBase {
     }
 
 
-    override fun fromCursor(c: Cursor?): Quake {
+    override fun fromCursor(c: Cursor): Quake {
         val quake = Quake()
-        quake.id = get(c!!, DBHelper.COLUMN_QUAKE_ID, "")
+        quake.id = get(c, DBHelper.COLUMN_QUAKE_ID, "")
         quake.title = get(c, DBHelper.COLUMN_TITLE, "")
         quake.link = get(c, DBHelper.COLUMN_URL, "")
         quake.magnitude = get(c, DBHelper.COLUMN_MAGNITUDE, "")
@@ -50,18 +50,15 @@ class SQLiteManager (context: Context): SqLiteWrapper<Quake>(), IDataBase {
         return quake
     }
 
-    override fun toContentValues(item: Quake?, cv: ContentValues?): ContentValues {
-        var cVal = cv
-        if(cVal == null) cVal = ContentValues()
-
-        cVal.put(DBHelper.COLUMN_QUAKE_ID, item?.id)
-        cVal.put(DBHelper.COLUMN_TITLE, item?.title)
-        cVal.put(DBHelper.COLUMN_URL, item?.link)
-        cVal.put(DBHelper.COLUMN_MAGNITUDE, item?.magnitude.toString())
-        cVal.put(DBHelper.COLUMN_TIME, item?.date?.time)
-        cVal.put(DBHelper.COLUMN_LNG, item?.longitude)
-        cVal.put(DBHelper.COLUMN_LAT, item?.latitude)
-        return cVal
+    override fun toContentValues(item: Quake, cv: ContentValues): ContentValues {
+        cv.put(DBHelper.COLUMN_QUAKE_ID, item.id)
+        cv.put(DBHelper.COLUMN_TITLE, item.title)
+        cv.put(DBHelper.COLUMN_URL, item.link)
+        cv.put(DBHelper.COLUMN_MAGNITUDE, item.magnitude.toString())
+        cv.put(DBHelper.COLUMN_TIME, item.date?.time)
+        cv.put(DBHelper.COLUMN_LNG, item.longitude)
+        cv.put(DBHelper.COLUMN_LAT, item.latitude)
+        return cv
     }
 
     override fun saveQuakes(quakes: List<Quake>) {

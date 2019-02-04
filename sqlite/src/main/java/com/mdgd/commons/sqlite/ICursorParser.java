@@ -2,6 +2,7 @@ package com.mdgd.commons.sqlite;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Max
@@ -9,9 +10,9 @@ import android.database.Cursor;
  */
 public interface ICursorParser<T> {
 
-    T fromCursor(Cursor c);
+    T fromCursor(@NonNull Cursor c);
 
-    ContentValues toContentValues(T item);
+    ContentValues toContentValues(@NonNull T item);
 
-    ContentValues toContentValues(T item, ContentValues cv);
+    ContentValues toContentValues(@NonNull T item, @NonNull ContentValues cv);
 }

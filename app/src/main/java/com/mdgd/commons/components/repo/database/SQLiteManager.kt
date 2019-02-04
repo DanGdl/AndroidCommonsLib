@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.mdgd.commons.components.Constants
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.sqlite.CursorParser
 import java.util.*
@@ -74,12 +75,14 @@ class SQLiteManager (context: Context): CursorParser<Quake>(), IDataBase {
 
     override fun getQuakesBulk(date: Long): List<Quake> {
         val quakes = ArrayList<Quake>()
+        val db = openReadable()
         val c: Cursor?
         if (date == 0L) {
-            c = openReadable().query(DBHelper.TABLE_QUAKES, null, null, null, null, null, DBHelper.COLUMN_TIME)
+            c = db.query(DBHelper.TABLE_QUAKES, null, null, null, null,
+                    null, DBHelper.COLUMN_TIME)
         } else {
-            c = openReadable().query(DBHelper.TABLE_QUAKES, null,
-                    DBHelper.COLUMN_TIME + " < ?", arrayOf(date.toString()), null, null, DBHelper.COLUMN_TIME)
+            c = db.query(DBHelper.TABLE_QUAKES, null, DBHelper.COLUMN_TIME + " < ?",
+                    arrayOf(date.toString()), null, null, DBHelper.COLUMN_TIME)
         }
 
         if (c != null) {
@@ -88,7 +91,7 @@ class SQLiteManager (context: Context): CursorParser<Quake>(), IDataBase {
                 do {
                     quakes.add(fromCursor(c))
                     counter++
-                } while (counter < 20 && c.moveToPrevious())
+                } while (counter < Constants.PAGE_SIZE && c.moveToPrevious())
             }
             c.close()
         }

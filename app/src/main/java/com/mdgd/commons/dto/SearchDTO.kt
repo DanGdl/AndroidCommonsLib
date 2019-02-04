@@ -1,4 +1,4 @@
-package com.mdgd.commons.ui.main.fr.quackes
+package com.mdgd.commons.dto
 
 import android.text.TextUtils
 

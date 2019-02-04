@@ -2,6 +2,7 @@ package com.mdgd.commons.ui.main.fr.quackes
 
 import com.mdgd.commons.contract.fragment.FragmentContract
 import com.mdgd.commons.dto.Quake
+import com.mdgd.commons.dto.SearchDTO
 
 /**
  * Created by max

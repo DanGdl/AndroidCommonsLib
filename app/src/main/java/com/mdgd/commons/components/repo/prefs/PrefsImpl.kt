@@ -19,7 +19,7 @@ class PrefsImp(ctx: Context): BasicPrefsImpl(ctx), IPrefs {
     }
 
     override val lastUpdateDate: Long
-        get() = get(LAST_UPDATE, -1L)
+        get() = get(LAST_UPDATE, (System.currentTimeMillis() - 3 * 3600_000)) // 3 hours
 
     override fun saveLastUpdateDate(millis: Long) {
         put(LAST_UPDATE, millis)

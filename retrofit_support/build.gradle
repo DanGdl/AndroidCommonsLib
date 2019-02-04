@@ -1,13 +1,15 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion project.compile_ver
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion project.min_ver
+        targetSdkVersion project.target_ver
+        versionCode project.ver_code
+        versionName "$project.ver_name"
     }
 
     buildTypes {
@@ -21,4 +23,8 @@ android {
 
 dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

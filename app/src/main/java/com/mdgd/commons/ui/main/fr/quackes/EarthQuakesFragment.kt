@@ -16,6 +16,7 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import com.mdgd.commons.R
 import com.mdgd.commons.components.Injection
+import com.mdgd.commons.databinding.FragmentRecyclerBinding
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.recycler.CommonRecyclerAdapter
 import com.mdgd.commons.support.v7.fragment.recycler.SwipeRecyclerFragment
@@ -45,6 +46,11 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_recycler, container, false)
+        swipe = binding?.swipeRefresh
+        recycler = binding?.recycler
+        swipe.setOnRefreshListener(this)
+        adapter = getAdapter()
+        recycler.adapter = adapter
         setHasProgress(true)
         return binding?.root
     }
@@ -74,7 +80,8 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
 
         binding?.searchParams?.root?.animate()?.translationYBy(TRANSLATE)?.setDuration(1)?.start()
 
-        presenter.getEarthQuakes(null)
+        binding?.swipeRefresh?.isRefreshing = true
+        onRefresh()
     }
 
     fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
@@ -83,7 +90,7 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
 
     override fun updateEarthQuakes(quakes: List<Quake>) {
         binding?.toolbarInc?.toolbarIcon?.requestFocus()
-        adapter?.setItems(quakes)
+        adapter?.addItems(quakes)
     }
 
     override fun onRefresh() {

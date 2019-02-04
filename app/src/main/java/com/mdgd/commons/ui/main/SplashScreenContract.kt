@@ -10,11 +10,7 @@ import com.mdgd.commons.contract.mvp.ViewContract
 
 class SplashScreenContract {
 
-    interface IPresenter: ViewContract.IPresenter {
-        fun updateQuakes()
-    }
+    interface IPresenter: ViewContract.IPresenter
 
-    interface IView : ViewContract.IView {
-        fun proceedFromSplash()
-    }
+    interface IView : ViewContract.IView
 }

@@ -17,7 +17,7 @@ object Injection {
     lateinit var provider: IComponentProvider
 
     fun getSplashPresenter(view: SplashScreenContract.IView): SplashScreenContract.IPresenter {
-        return SplashPresenter(view, provider.getRepo())
+        return SplashPresenter(view)
     }
 
     fun getSplashFragmentPresenter(view: SplashFragmentContract.IView): SplashFragmentContract.IPresenter {

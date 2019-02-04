@@ -13,13 +13,13 @@ class QuakesSchema {
 
     @Expose
     @SerializedName("features")
-    private var mQuakes: List<QuakeSchema>? = null
+    private var quakes: List<QuakeSchema>? = null
 
     val earthquakes: List<QuakeSchema>
-        get() = if (mQuakes == null) ArrayList()
-        else mQuakes!!
+        get() = if (quakes == null) ArrayList()
+        else quakes!!
 
     fun setQuakes(mQuakes: List<QuakeSchema>) {
-        this.mQuakes = mQuakes
+        this.quakes = mQuakes
     }
 }

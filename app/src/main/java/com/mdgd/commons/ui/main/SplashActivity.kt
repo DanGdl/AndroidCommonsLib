@@ -18,11 +18,11 @@ class SplashActivity : HostActivity<SplashScreenContract.IPresenter>(), SplashSc
     }
 
     override fun getFirstFragment(): Fragment {
-        presenter.updateQuakes()
+        container.postDelayed({ proceedFromSplash() }, 600L)
         return SplashFragment.newInstance()
     }
 
-    override fun proceedFromSplash() {
+    private fun proceedFromSplash() {
         replaceFragment(EarthQuakesFragment.newInstance())
     }
 }

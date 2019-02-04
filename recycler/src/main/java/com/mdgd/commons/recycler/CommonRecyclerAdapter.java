@@ -26,9 +26,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Comm
 
     @Override
     public void onBindViewHolder(@NonNull CommonViewHolder<T> holder, int position) {
-        if(items != null && position >= 0 && position < items.size()) {
-            holder.bindItem(items.get(position), position);
-        }
+        if(items != null && position >= 0 && position < items.size()) holder.bindItem(items.get(position), position);
     }
 
     @Override
@@ -42,10 +40,9 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Comm
     }
 
     public void addItems(List<T> items) {
-        if(this.items == null){
-            setItems(items);
-        }
-        else{
+        if(items == null || items.isEmpty()) return;
+        if(this.items == null) setItems(items);
+        else {
             final  int start = this.items.size();
             this.items.addAll(items);
             notifyItemRangeInserted(start, items.size());

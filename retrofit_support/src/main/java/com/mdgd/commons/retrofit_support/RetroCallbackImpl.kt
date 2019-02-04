@@ -1,4 +1,4 @@
-package com.mdgd.commons.retrofitSupport
+package com.mdgd.commons.retrofit_support
 
 import retrofit2.Call
 import retrofit2.Callback

@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.mdgd.commons.components.repo.network.schemas.QuakeSchema;
 import com.mdgd.commons.components.repo.network.schemas.QuakesSchema;
 import com.mdgd.commons.dto.Quake;
-import com.mdgd.commons.retrofitSupport.BasicNetwork;
-import com.mdgd.commons.retrofitSupport.ICallback;
+import com.mdgd.commons.retrofit_support.BasicNetwork;
+import com.mdgd.commons.retrofit_support.ICallback;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,18 +80,14 @@ public class NetworkManager extends BasicNetwork implements INetwork {
     }
 
     public void getEarthquakes(@NotNull Date start, @NotNull Date end, @NotNull ICallback<List<Quake>> listener){
-        final String endDate = mSDF.format(end);
-        final String startDate = mSDF.format(start);
-        getEarthquakes(startDate, endDate, listener);
+        getEarthquakes(mSDF.format(start), mSDF.format(end), listener);
     }
 
     private void getEarthquakes(long startDate, @NotNull ICallback<List<Quake>> listener) {
-        String start;
         final Calendar cal = Calendar.getInstance();
         if(startDate != -1) cal.setTimeInMillis(startDate);
 
-        start = mSDF.format(cal.getTime());
-        getEarthquakes(start, "NOW", listener);
+        getEarthquakes(mSDF.format(cal.getTime()), "NOW", listener);
     }
 
     public void checkNewEarthquakes(long lastUpdate, @NotNull ICallback<List<Quake>> listener){

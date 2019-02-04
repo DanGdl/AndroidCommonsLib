@@ -1,7 +1,7 @@
 package com.mdgd.commons.components.repo
 
 import com.mdgd.commons.dto.Quake
-import com.mdgd.commons.retrofitSupport.ICallback
+import com.mdgd.commons.retrofit_support.ICallback
 import com.mdgd.commons.ui.main.fr.quackes.SearchDTO
 import java.util.*
 

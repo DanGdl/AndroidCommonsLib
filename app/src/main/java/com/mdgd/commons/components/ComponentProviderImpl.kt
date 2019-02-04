@@ -6,36 +6,36 @@ import com.mdgd.commons.components.repo.Repo
 import com.mdgd.commons.components.repo.database.IDataBase
 import com.mdgd.commons.components.repo.database.SQLiteManager
 import com.mdgd.commons.components.repo.network.INetwork
+import com.mdgd.commons.components.repo.network.NetworkManager
 import com.mdgd.commons.components.repo.prefs.IPrefs
 import com.mdgd.commons.components.repo.prefs.PrefsImp
 import com.mdgd.commons.injection.BasicProvider
-import com.mdgd.commons.injection.IInitAction
 import java.lang.ref.WeakReference
 
 class ComponentProviderImpl(val ctx: Context): BasicProvider(), IComponentProvider {
 
-    private var repoRef: WeakReference<IRepo>?
-    private var prefsRef: WeakReference<IPrefs>?
-    private var networkRef: WeakReference<INetwork>?
-    private var dbRef: WeakReference<IDataBase>?
+    private var repoRef: WeakReference<IRepo>? = null
+    private var prefsRef: WeakReference<IPrefs>? = null
+    private var networkRef: WeakReference<INetwork>? = null
+    private var dbRef: WeakReference<IDataBase>? = null
 
     override fun getRepo(): IRepo {
-        repoRef = checkIfExists(repoRef, IInitAction { Repo(getNetwork(), getQuakesDB(), getPrefs()) })
-        return repoRef.get()!!
+        repoRef = checkIfExists(repoRef){ Repo(getNetwork(), getQuakesDB(), getPrefs()) }
+        return repoRef!!.get()!!
     }
 
     private fun getPrefs(): IPrefs {
-        prefsRef = checkIfExists(prefsRef, IInitAction { PrefsImp(ctx) })
-        return prefsRef.get()!!
+        prefsRef = checkIfExists(prefsRef){ PrefsImp(ctx) }
+        return prefsRef!!.get()!!
     }
 
     private fun getQuakesDB(): IDataBase {
-        dbRef = checkIfExists(dbRef, IInitAction {  SQLiteManager(ctx) })
-        return dbRef.get()!!
+        dbRef = checkIfExists(dbRef){ SQLiteManager(ctx) }
+        return dbRef!!.get()!!
     }
 
     private fun getNetwork(): INetwork {
-        networkRef = checkIfExists(networkRef, () -> NetworkManager())
-        return networkRef.get()!!
+        networkRef = checkIfExists(networkRef){ NetworkManager() }
+        return networkRef!!.get()!!
     }
 }

@@ -1,4 +1,4 @@
-package com.mdgd.commons.retrofitSupport
+package com.mdgd.commons.retrofit_support
 
 class Result<T>(val data: T? = null, val error: Throwable? = null) {
 

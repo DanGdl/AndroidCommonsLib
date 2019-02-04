@@ -4,7 +4,7 @@ import com.mdgd.commons.components.repo.database.IDataBase
 import com.mdgd.commons.components.repo.network.INetwork
 import com.mdgd.commons.components.repo.prefs.IPrefs
 import com.mdgd.commons.dto.Quake
-import com.mdgd.commons.retrofitSupport.ICallback
+import com.mdgd.commons.retrofit_support.ICallback
 import com.mdgd.commons.ui.main.fr.quackes.SearchDTO
 import java.util.*
 

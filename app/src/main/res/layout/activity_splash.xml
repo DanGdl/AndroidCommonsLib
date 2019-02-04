@@ -4,14 +4,6 @@
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <fragment
-            android:id="@+id/splashFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.mdgd.commons.ui.main.fr.splash.SplashFragment"/>
-
-    </FrameLayout>
+        android:layout_height="match_parent"/>
 
 </layout>

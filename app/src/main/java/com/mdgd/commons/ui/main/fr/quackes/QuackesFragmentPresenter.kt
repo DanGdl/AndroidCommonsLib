@@ -2,7 +2,9 @@ package com.mdgd.commons.ui.main.fr.quackes
 
 import com.mdgd.commons.R
 import com.mdgd.commons.components.repo.IRepo
-import com.mdgd.commons.components.repo.network.schemas.QuakeSchema
+import com.mdgd.commons.dto.Quake
+import com.mdgd.commons.retrofit_support.ICallback
+import com.mdgd.commons.retrofit_support.Result
 import com.mdgd.commons.support.v7.fragment.FragmentPresenter
 import java.util.*
 
@@ -19,16 +21,17 @@ class QuackesFragmentPresenter(view: QuakesFragmentContract.IView, val repo: IRe
 
     override fun checkNewEarthQuakes() {
         view.showProgress(R.string.empty, R.string.wait_please)
-        repo.checkNewEarthquakes(object : IQuakesCallbackListener {
-            override fun onNetworkError(errorMessage: String, errorCode: Int) {
-                view.hideProgress()
-                view.showToast(R.string.shit, errorMessage)
-            }
-
-            override fun onNetworkSuccess(quakes: List<QuakeSchema>) {
-                view.hideProgress()
-                repo.saveLastUpdate(Date().time)
-                repo.save(quakes) // real will update view automatically
+        repo.checkNewEarthquakes(object : ICallback<List<Quake>> {
+            override fun onResult(result: Result<List<Quake>>) {
+                if(result.isFail()){
+                    view.hideProgress()
+                    view.showToast(R.string.shit, result.error?.message)
+                } else {
+                    repo.saveLastUpdate(Date().time)
+                    repo.save(result.data!!)
+                    view.hideProgress()
+                    view.updateEarthQuakes(result.data!!)
+                }
             }
         })
     }
@@ -39,16 +42,16 @@ class QuackesFragmentPresenter(view: QuakesFragmentContract.IView, val repo: IRe
             val end = Date(lastDate)
             val start = Date(lastDate)
             start.date = start.date - 1
-            repo.getEarthquakes(start, end, object : IQuakesCallbackListener {
-                override fun onNetworkError(errorMessage: String, errorCode: Int) {
-                    view.showToast(R.string.shit, errorMessage)
-
-                    view.hideProgress()
-                }
-
-                override fun onNetworkSuccess(quakes: List<QuakeSchema>) {
-                    view.hideProgress()
-                    repo.save(quakes)
+            repo.getEarthquakes(start, end, object : ICallback<List<Quake>> {
+                override fun onResult(result: Result<List<Quake>>) {
+                    if(result.isFail()){
+                        view.hideProgress()
+                        view.showToast(R.string.shit, result.error?.message)
+                    } else {
+                        repo.save(result.data!!)
+                        view.hideProgress()
+                        view.updateEarthQuakes(result.data!!)
+                    }
                 }
             })
         }

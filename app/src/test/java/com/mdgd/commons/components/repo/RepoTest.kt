@@ -56,11 +56,15 @@ class RepoTest {
 
     @Test
     fun checkNewEarthquakes() {
+        val callback = Mockito.mock(ICallback::class.java) as ICallback<List<Quake>>
         val captor: ArgumentCaptor<ICallback<List<Quake>>> =
                 ArgumentCaptor.forClass(ICallback::class.java) as ArgumentCaptor<ICallback<List<Quake>>>
+        val timeCaptor: ArgumentCaptor<Long> = ArgumentCaptor.forClass(Long::class.java) as ArgumentCaptor<Long>
 
-        repo.checkNewEarthquakes(captor.capture())
+        repo.checkNewEarthquakes(callback)
 
+        Mockito.verify(network, Mockito.times(1))?.checkNewEarthquakes(timeCaptor.capture(),
+                captor.capture())
         verifyNoInteraction()
     }
 

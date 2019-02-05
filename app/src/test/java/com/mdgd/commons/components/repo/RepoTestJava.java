@@ -64,6 +64,7 @@ public class RepoTestJava {
     public void checkNewEarthquakes_fail_emptyDb() {
         Mockito.when(prefs.getLastUpdateDate()).thenReturn(MOCK_TIME);
         final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
+        final ArgumentCaptor<Result<List<Quake>>> resultCaptor = ArgumentCaptor.forClass(Result.class);
         final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
         final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
 
@@ -75,7 +76,7 @@ public class RepoTestJava {
         Assert.assertEquals(MOCK_TIME, timeCaptor.getValue());
         captor.getValue().onResult(new Result<>(new Exception("Mock!")));
         Mockito.verify(db, Mockito.times(1)).getQuakesBulk(timeCaptor.capture());
-        Assert.assertThat(timeCaptor.getAllValues().get(1), new DefMatcherImp<Long>() {
+        Assert.assertThat(timeCaptor.getAllValues().get(1), new DefMatcherImp<Long>("Time not matches: ") {
 
             @Override
             protected boolean match(Long time) {
@@ -83,6 +84,8 @@ public class RepoTestJava {
                 return time <= now && time > now - 3;
             }
         });
+        Mockito.verify(callback, Mockito.times(1)).onResult(resultCaptor.capture());
+        Assert.assertTrue(resultCaptor.getValue().data.isEmpty());
         verifyNoInteraction();
     }
 
@@ -96,6 +99,7 @@ public class RepoTestJava {
         Mockito.when(db.getQuakesBulk(timeCaptor.capture())).thenReturn(quakes);
         Mockito.when(prefs.getLastUpdateDate()).thenReturn(MOCK_TIME);
         final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
+        final ArgumentCaptor<Result<List<Quake>>> resultCaptor = ArgumentCaptor.forClass(Result.class);
         final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
 
         repo.checkNewEarthquakes(callback);
@@ -106,14 +110,16 @@ public class RepoTestJava {
         Assert.assertEquals(MOCK_TIME, timeCaptor.getValue());
         captor.getValue().onResult(new Result<>(new Exception("Mock!")));
         Mockito.verify(db, Mockito.times(1)).getQuakesBulk(timeCaptor.capture());
-        Assert.assertThat(timeCaptor.getAllValues().get(1), new DefMatcherImp<Long>() {
+        Assert.assertThat(timeCaptor.getAllValues().get(1), new DefMatcherImp<Long>("Time not matches: ") {
 
             @Override
             protected boolean match(Long time) {
                 final long now = System.currentTimeMillis();
-                return time <= now + 2 && time > now - 2;
+                return time <= now && time > now - 3;
             }
         });
+        Mockito.verify(callback, Mockito.times(1)).onResult(resultCaptor.capture());
+        Assert.assertEquals(quakes, resultCaptor.getValue().data);
         verifyNoInteraction();
     }
 

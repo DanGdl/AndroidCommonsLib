@@ -48,10 +48,7 @@ class Repo(private val network: INetwork, private val dataBase: IDataBase, priva
                 prefs.saveLastUpdateDate(Date().time)
                 save(it.data!!)
                 queryData(listener, it.data!!)
-            } else {
-                listener.onResult(it)
-                queryData(listener, ArrayList())
-            }
+            } else queryData(listener, ArrayList())
         })
     }
 

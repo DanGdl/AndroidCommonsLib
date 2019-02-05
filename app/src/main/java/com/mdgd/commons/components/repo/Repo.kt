@@ -29,32 +29,28 @@ class Repo(private val network: INetwork, private val dataBase: IDataBase, priva
 
         val start = Date(end.time)
         start.date = start.date - 1
-        network.getEarthquakes(start, end, object: ICallback<List<Quake>>{
-            override fun onResult(result: Result<List<Quake>>) {
-                if (result.isSuccess()){
-                    save(result.data!!)
-                    queryData(listener, result.data!!)
-                } else {
-                    listener.onResult(result)
-                    tryout += 1
-                    queryData(listener, ArrayList())
-                }
+        network.getEarthquakes(start, end, ICallback {
+            if (it.isSuccess){
+                save(it.data!!)
+                queryData(listener, it.data!!)
+            } else {
+                listener.onResult(it)
+                tryout += 1
+                queryData(listener, ArrayList())
             }
         })
     }
 
     override fun checkNewEarthquakes(listener: ICallback<List<Quake>>) {
         tryout = 0
-        network.checkNewEarthquakes(prefs.lastUpdateDate, object: ICallback<List<Quake>>{
-            override fun onResult(result: Result<List<Quake>>) {
-                if(result.isSuccess()) {
-                    prefs.saveLastUpdateDate(Date().time)
-                    save(result.data!!)
-                    queryData(listener, result.data!!)
-                } else {
-                    listener.onResult(result)
-                    queryData(listener, ArrayList())
-                }
+        network.checkNewEarthquakes(prefs.lastUpdateDate, ICallback {
+            if(it.isSuccess) {
+                prefs.saveLastUpdateDate(Date().time)
+                save(it.data!!)
+                queryData(listener, it.data!!)
+            } else {
+                listener.onResult(it)
+                queryData(listener, ArrayList())
             }
         })
     }
@@ -64,14 +60,16 @@ class Repo(private val network: INetwork, private val dataBase: IDataBase, priva
             callback.onResult(Result(data.subList(0, Constants.PAGE_SIZE)))
         }
         else if(data.size < Constants.PAGE_SIZE) {
-            val bulk = dataBase.getQuakesBulk(data[0].date?.time!!)
-            val quakes = mutableListOf<Quake>()
-            quakes.addAll(data)
-            quakes.addAll(bulk)
-            if(quakes.size >= Constants.PAGE_SIZE) queryData(callback, quakes)
-            else {
-                callback.onResult(Result(quakes))
-                getEarthquakes(quakes.last().date!!, callback)
+            if(data.isEmpty()){ // error
+                val bulk = dataBase.getQuakesBulk(System.currentTimeMillis())
+                callback.onResult(Result(bulk))
+            } else {
+                val bulk = dataBase.getQuakesBulk(data[0].date?.time!!)
+                val quakes = mutableListOf<Quake>()
+                quakes.addAll(data)
+                quakes.addAll(bulk)
+                if (quakes.size >= Constants.PAGE_SIZE) queryData(callback, quakes)
+                else getEarthquakes(quakes.last().date!!, callback) // there is not enough in db
             }
         }
     }

@@ -1,12 +1,15 @@
 package com.mdgd.commons.components.repo;
 
+import com.mdgd.commons.DefMatcherImp;
 import com.mdgd.commons.components.repo.database.IDataBase;
 import com.mdgd.commons.components.repo.network.INetwork;
 import com.mdgd.commons.components.repo.prefs.IPrefs;
 import com.mdgd.commons.dto.Quake;
 import com.mdgd.commons.dto.SearchDTO;
 import com.mdgd.commons.retrofit_support.ICallback;
+import com.mdgd.commons.retrofit_support.Result;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,12 +25,11 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class RepoTestJava {
 
-    @Mock
-    private INetwork network;
-    @Mock
-    private IDataBase db;
-    @Mock
-    private IPrefs prefs;
+    private static final Long MOCK_TIME = System.currentTimeMillis() - 5 * 3600_000;
+
+    @Mock private INetwork network;
+    @Mock private IDataBase db;
+    @Mock private IPrefs prefs;
 
     private IRepo repo;
 
@@ -59,16 +61,59 @@ public class RepoTestJava {
     }
 
     @Test
-    public void checkNewEarthquakes() {
+    public void checkNewEarthquakes_fail_emptyDb() {
+        Mockito.when(prefs.getLastUpdateDate()).thenReturn(MOCK_TIME);
         final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
         final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
         final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
 
         repo.checkNewEarthquakes(callback);
 
+        Mockito.verify(prefs, Mockito.times(1)).getLastUpdateDate();
         Mockito.verify(network, Mockito.times(1)).checkNewEarthquakes(timeCaptor.capture(),
                 captor.capture());
+        Assert.assertEquals(MOCK_TIME, timeCaptor.getValue());
+        captor.getValue().onResult(new Result<>(new Exception("Mock!")));
+        Mockito.verify(db, Mockito.times(1)).getQuakesBulk(timeCaptor.capture());
+        Assert.assertThat(timeCaptor.getAllValues().get(1), new DefMatcherImp<Long>() {
+
+            @Override
+            protected boolean match(Long time) {
+                final long now = System.currentTimeMillis();
+                return time <= now && time > now - 3;
+            }
+        });
+        verifyNoInteraction();
+    }
+
+    @Test
+    public void checkNewEarthquakes_fail_inDbNotEnough() {
+        final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+        final List<Quake> quakes = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            quakes.add(new Quake());
+        }
+        Mockito.when(db.getQuakesBulk(timeCaptor.capture())).thenReturn(quakes);
+        Mockito.when(prefs.getLastUpdateDate()).thenReturn(MOCK_TIME);
+        final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
+        final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
+
+        repo.checkNewEarthquakes(callback);
+
         Mockito.verify(prefs, Mockito.times(1)).getLastUpdateDate();
+        Mockito.verify(network, Mockito.times(1)).checkNewEarthquakes(timeCaptor.capture(),
+                captor.capture());
+        Assert.assertEquals(MOCK_TIME, timeCaptor.getValue());
+        captor.getValue().onResult(new Result<>(new Exception("Mock!")));
+        Mockito.verify(db, Mockito.times(1)).getQuakesBulk(timeCaptor.capture());
+        Assert.assertThat(timeCaptor.getAllValues().get(1), new DefMatcherImp<Long>() {
+
+            @Override
+            protected boolean match(Long time) {
+                final long now = System.currentTimeMillis();
+                return time <= now + 2 && time > now - 2;
+            }
+        });
         verifyNoInteraction();
     }
 

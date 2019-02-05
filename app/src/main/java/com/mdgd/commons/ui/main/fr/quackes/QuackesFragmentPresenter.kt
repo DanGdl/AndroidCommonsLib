@@ -2,14 +2,12 @@ package com.mdgd.commons.ui.main.fr.quackes
 
 import com.mdgd.commons.R
 import com.mdgd.commons.components.repo.IRepo
-import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.dto.SearchDTO
 import com.mdgd.commons.retrofit_support.ICallback
-import com.mdgd.commons.retrofit_support.Result
 import com.mdgd.commons.support.v7.fragment.FragmentPresenter
 import java.util.*
 
-class QuackesFragmentPresenter(view: QuakesFragmentContract.IView, private val repo: IRepo):
+class QuackesFragmentPresenter(view: QuakesFragmentContract.IView, private val repo: IRepo) :
         FragmentPresenter<QuakesFragmentContract.IView>(view), QuakesFragmentContract.IPresenter {
 
     private var query: SearchDTO? = null
@@ -22,25 +20,21 @@ class QuackesFragmentPresenter(view: QuakesFragmentContract.IView, private val r
 
     override fun checkNewEarthQuakes() {
         view.showProgress(R.string.empty, R.string.wait_please)
-        repo.checkNewEarthquakes(object : ICallback<List<Quake>> {
-            override fun onResult(result: Result<List<Quake>>) {
-                view.hideProgress()
-                if(result.isFail()) view.showToast(R.string.shit, result.error?.message)
-                else view.updateEarthQuakes(result.data!!)
-            }
+        repo.checkNewEarthquakes(ICallback {
+            view.hideProgress()
+            if (it.isFail) view.showToast(R.string.shit, it.error?.message)
+            else view.updateEarthQuakes(it.data!!)
         })
     }
 
     override fun getNextBulk(lastDate: Long) {
-        if (lastDate != -1L && query?.isEmpty!!) {
+        if (lastDate != -1L && (query == null || query?.isEmpty!!)) {
             view.showProgress(R.string.empty, R.string.wait_please)
             val end = Date(lastDate)
-            repo.getEarthquakes(end, object : ICallback<List<Quake>> {
-                override fun onResult(result: Result<List<Quake>>) {
-                    view.hideProgress()
-                    if(result.isFail()) view.showToast(R.string.shit, result.error?.message)
-                    else view.updateEarthQuakes(result.data!!)
-                }
+            repo.getEarthquakes(end, ICallback {
+                view.hideProgress()
+                if (it.isFail) view.showToast(R.string.shit, it.error?.message)
+                else view.updateEarthQuakes(it.data!!)
             })
         }
     }

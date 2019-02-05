@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion project.compile_ver
@@ -22,9 +20,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_ver"
+    implementation "com.android.support:support-annotations:$support_ver"
 }

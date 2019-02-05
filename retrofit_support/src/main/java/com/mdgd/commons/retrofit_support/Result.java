@@ -19,7 +19,7 @@ public class Result<T> {
     }
 
     public boolean isFail() {
-        return data == null;
+        return error != null;
     }
 
     public boolean isSuccess() {

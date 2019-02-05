@@ -65,9 +65,8 @@ public class PermissionItem {
             else {
                 final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 intent.setData(Uri.parse("package:" + activity.getPackageName()));
-                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+                if (activity.getPackageManager().resolveActivity(intent, 0) != null)
                     activity.startActivityForResult(intent, rcCode);
-                }
             }
         } else if (action != null) action.requestPermission(activity, hint);
     }

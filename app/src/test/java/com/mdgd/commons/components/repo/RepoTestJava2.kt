@@ -16,23 +16,23 @@ import org.mockito.junit.MockitoJUnitRunner
 import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
-class RepoTest {
+class RepoTestJava2 {
 
     @Mock
-    private var network: INetwork? = null
+    private val network: INetwork? = null
     @Mock
     private val db: IDataBase? = null
     @Mock
     private val prefs: IPrefs? = null
 
-    private lateinit var repo: IRepo
+    private var repo: IRepo? = null
 
     @Before
     fun setUp() {
         repo = Repo(network!!, db!!, prefs!!)
     }
 
-    private fun verifyNoInteraction(){
+    private fun verifyNoInteraction() {
         Mockito.verifyNoMoreInteractions(network)
         Mockito.verifyNoMoreInteractions(prefs)
         Mockito.verifyNoMoreInteractions(db)
@@ -42,13 +42,14 @@ class RepoTest {
     fun getEarthquakes() {
         val end = Date()
         val callback = Mockito.mock(ICallback::class.java) as ICallback<List<Quake>>
-        val endCaptor = ArgumentCaptor.forClass(Date::class.java) as ArgumentCaptor<Date>
-        val startCaptor = ArgumentCaptor.forClass(Date::class.java) as ArgumentCaptor<Date>
+        val endCaptor = ArgumentCaptor.forClass(Date::class.java)
+        val startCaptor = ArgumentCaptor.forClass(Date::class.java)
         val captor = ArgumentCaptor.forClass(ICallback::class.java) as ArgumentCaptor<ICallback<List<Quake>>>
+        // val captor = ArgumentCaptor.forClass<ICallback<List<Quake>>, ICallback<*>>(ICallback<*>::class.java)
 
-        repo.getEarthquakes(end, callback)
+        repo!!.getEarthquakes(end, callback)
 
-        Mockito.verify(network, Mockito.times(1))?.getEarthquakes(startCaptor.capture(),
+        Mockito.verify<INetwork>(network, Mockito.times(1)).getEarthquakes(startCaptor.capture(),
                 endCaptor.capture(), captor.capture())
 
         verifyNoInteraction()
@@ -57,13 +58,15 @@ class RepoTest {
     @Test
     fun checkNewEarthquakes() {
         val callback = Mockito.mock(ICallback::class.java) as ICallback<List<Quake>>
-        val captor = ArgumentCaptor.forClass(ICallback::class.java) as ArgumentCaptor<ICallback<List<Quake>>>
-        val timeCaptor = ArgumentCaptor.forClass(Long::class.java) as ArgumentCaptor<Long>
+        val captor = ArgumentCaptor.forClass<ICallback<List<Quake>>, ICallback<List<Quake>>>(ICallback::class.java)
+        // val captor = ArgumentCaptor.forClass(ICallback::class.java) as ArgumentCaptor<ICallback<List<Quake>>>
+        val timeCaptor = ArgumentCaptor.forClass(Long::class.java)
 
-        repo.checkNewEarthquakes(callback)
+        repo!!.checkNewEarthquakes(callback)
 
-        Mockito.verify(network, Mockito.times(1))?.checkNewEarthquakes(timeCaptor.capture(),
+        Mockito.verify<INetwork>(network, Mockito.times(1)).checkNewEarthquakes(timeCaptor.capture(),
                 captor.capture())
+        Mockito.verify<IPrefs>(prefs, Mockito.times(1)).lastUpdateDate
         verifyNoInteraction()
     }
 
@@ -71,18 +74,18 @@ class RepoTest {
     fun getAllQuakes() {
         val params = SearchDTO("", "", "", "", "", "", "")
 
-        repo.getAllQuakes(params)
+        repo!!.getAllQuakes(params)
 
         verifyNoInteraction()
     }
 
     @Test
     fun save() {
-        val quakes: List<Quake> = ArrayList()
+        val quakes = ArrayList<Quake>()
 
-        repo.save(quakes)
+        repo!!.save(quakes)
 
-        Mockito.verify(db, Mockito.times(1))?.saveQuakes(quakes)
+        Mockito.verify<IDataBase>(db, Mockito.times(1)).saveQuakes(quakes)
         verifyNoInteraction()
     }
 }

@@ -18,57 +18,55 @@ import kotlin.collections.ArrayList
 
 class Repo(private val network: INetwork, private val dataBase: IDataBase, private val prefs: IPrefs) : IRepo {
 
-    private var tryout: Int = 0
-    private val maxTryout: Int = 1
-
     override fun getEarthquakes(end: Date, listener: ICallback<List<Quake>>) {
-        if(tryout > maxTryout){
-            tryout = 0
-            return
-        }
-
         val start = Date(end.time)
         start.date = start.date - 1
         network.getEarthquakes(start, end, ICallback {
             if (it.isSuccess){
                 save(it.data!!)
-                queryData(listener, it.data!!)
+                queryData(listener, it.data!!, false, start.time)
             } else {
-                listener.onResult(it)
-                tryout += 1
-                queryData(listener, ArrayList())
+                listener.onResult(it)  // show error
+                queryData(listener, ArrayList(), true, start.time)
             }
         })
     }
 
     override fun checkNewEarthquakes(listener: ICallback<List<Quake>>) {
-        tryout = 0
+        val now = System.currentTimeMillis()
         network.checkNewEarthquakes(prefs.lastUpdateDate, ICallback {
             if(it.isSuccess) {
-                prefs.saveLastUpdateDate(Date().time)
-                save(it.data!!)
-                queryData(listener, it.data!!)
-            } else queryData(listener, ArrayList())
+                if(!it.data!!.isEmpty()) save(it.data!!)
+                queryData(listener, it.data!!, false, prefs.lastUpdateDate)
+                prefs.saveLastUpdateDate(now)
+            } else {
+                listener.onResult(it) // show error
+                queryData(listener, ArrayList(), true, prefs.lastUpdateDate)
+            }
         })
     }
 
-    private fun queryData(callback: ICallback<List<Quake>>, data: List<Quake>) {
-        if(data.size >= Constants.PAGE_SIZE) {
-            callback.onResult(Result(data.subList(0, Constants.PAGE_SIZE)))
-        }
+    private fun queryData(callback: ICallback<List<Quake>>, data: List<Quake>, isError: Boolean, queryStartTime: Long) {
+        if(data.size >= Constants.PAGE_SIZE) callback.onResult(Result(data.subList(0, Constants.PAGE_SIZE)))
         else if(data.size < Constants.PAGE_SIZE) {
-            if(data.isEmpty()){ // error
+            if(data.isEmpty()){
                 val bulk = dataBase.getQuakesBulk(System.currentTimeMillis())
-                callback.onResult(Result(bulk))
+                if(isError) callback.onResult(Result(bulk))
+                else checkQueryResult(bulk, callback, queryStartTime)
             } else {
                 val bulk = dataBase.getQuakesBulk(data[0].date?.time!!)
                 val quakes = mutableListOf<Quake>()
                 quakes.addAll(data)
                 quakes.addAll(bulk)
-                if (quakes.size >= Constants.PAGE_SIZE) queryData(callback, quakes)
-                else getEarthquakes(quakes.last().date!!, callback) // there is not enough in db
+                checkQueryResult(quakes, callback, queryStartTime)
             }
         }
+    }
+
+    private fun checkQueryResult(quakes: List<Quake>, callback: ICallback<List<Quake>>, queryStartTime: Long) {
+        if (quakes.size >= Constants.PAGE_SIZE) queryData(callback, quakes, false, queryStartTime)
+        else if(quakes.isEmpty()) getEarthquakes(Date(queryStartTime), callback)
+        else getEarthquakes(quakes.last().date!!, callback) // there is not enough in db
     }
 
     override fun getAllQuakes(searchParams: SearchDTO?): List<Quake> {

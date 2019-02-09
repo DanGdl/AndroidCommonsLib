@@ -6,6 +6,7 @@ import org.hamcrest.Description;
 public abstract class DefMatcherImp<T> extends BaseMatcher<T> {
 
     private final String msg;
+    protected T expected;
 
     public DefMatcherImp(String msg) {
         this.msg = msg;
@@ -20,9 +21,11 @@ public abstract class DefMatcherImp<T> extends BaseMatcher<T> {
 
     @Override
     public void describeMismatch(Object item, Description mismatchDescription) {
-        System.out.println(msg + item);
+        mismatchDescription.appendText("" + item);
     }
 
     @Override
-    public void describeTo(Description description) {}
+    public void describeTo(Description description) {
+        description.appendText("" + expected);
+    }
 }

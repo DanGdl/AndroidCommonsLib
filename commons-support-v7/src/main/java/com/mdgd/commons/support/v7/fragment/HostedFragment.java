@@ -25,7 +25,6 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y extends FragmentContract.IHost> extends Fragment
         implements FragmentContract.IFragment, FragmentContract.IView {
     private boolean hasProgress = false;
-    private boolean onForeground = false;
     private IProgressView progress;
     protected final X presenter;
     protected Y host;
@@ -65,18 +64,6 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        onForeground = true;
-    }
-
-    @Override
-    public void onPause(){
-        onForeground = false;
-        super.onPause();
-    }
-
-    @Override
     public void showProgress() {
         showProgress("", "");
     }
@@ -91,7 +78,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     public void showProgress(String title, String message) {
         try {
             if (progress == null) progress = createProgressView(title, message);
-            if (onForeground && !progress.isShowing() && host != null && !host.isFinishing()) progress.show();
+            if (!progress.isShowing() && host != null && !host.isFinishing()) progress.show();
         }
         catch (Throwable e){
             e.printStackTrace();

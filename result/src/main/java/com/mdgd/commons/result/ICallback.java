@@ -1,4 +1,4 @@
-package com.mdgd.commons.retrofit_support;
+package com.mdgd.commons.result;
 
 /**
  * Created by Owner

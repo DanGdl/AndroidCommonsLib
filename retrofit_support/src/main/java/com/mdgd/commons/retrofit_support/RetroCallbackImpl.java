@@ -2,6 +2,9 @@ package com.mdgd.commons.retrofit_support;
 
 import android.support.annotation.NonNull;
 
+import com.mdgd.commons.result.ICallback;
+import com.mdgd.commons.result.Result;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

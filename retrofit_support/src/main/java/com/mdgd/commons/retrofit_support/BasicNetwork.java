@@ -1,5 +1,7 @@
 package com.mdgd.commons.retrofit_support;
 
+import com.mdgd.commons.result.ICallback;
+
 import retrofit2.Call;
 
 /**

@@ -2,7 +2,7 @@ package com.mdgd.commons.components.repo
 
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.dto.SearchDTO
-import com.mdgd.commons.retrofit_support.ICallback
+import com.mdgd.commons.result.ICallback
 import java.util.*
 
 /**
@@ -12,9 +12,9 @@ import java.util.*
 
 interface IRepo {
 
-    fun getEarthquakes(end: Date, listener: ICallback<List<Quake>>)
+    fun getEarthquakes(end: Date, listener: com.mdgd.commons.result.ICallback<List<Quake>>)
 
-    fun checkNewEarthquakes(listener: ICallback<List<Quake>>)
+    fun checkNewEarthquakes(listener: com.mdgd.commons.result.ICallback<List<Quake>>)
 
     fun getAllQuakes(searchParams: SearchDTO?): List<Quake>
 

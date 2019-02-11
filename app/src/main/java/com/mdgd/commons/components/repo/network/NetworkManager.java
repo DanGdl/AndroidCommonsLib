@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.mdgd.commons.components.repo.network.schemas.QuakeSchema;
 import com.mdgd.commons.components.repo.network.schemas.QuakesSchema;
 import com.mdgd.commons.dto.Quake;
+import com.mdgd.commons.result.ICallback;
 import com.mdgd.commons.retrofit_support.BasicNetwork;
-import com.mdgd.commons.retrofit_support.ICallback;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

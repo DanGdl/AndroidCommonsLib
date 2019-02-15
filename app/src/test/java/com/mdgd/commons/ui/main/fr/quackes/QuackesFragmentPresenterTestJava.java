@@ -4,8 +4,8 @@ import com.mdgd.commons.R;
 import com.mdgd.commons.components.repo.IRepo;
 import com.mdgd.commons.dto.Quake;
 import com.mdgd.commons.dto.SearchDTO;
-import com.mdgd.commons.retrofit_support.ICallback;
-import com.mdgd.commons.retrofit_support.Result;
+import com.mdgd.commons.result.ICallback;
+import com.mdgd.commons.result.Result;
 
 import org.junit.Assert;
 import org.junit.Before;

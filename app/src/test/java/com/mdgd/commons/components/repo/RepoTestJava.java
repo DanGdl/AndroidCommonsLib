@@ -7,8 +7,8 @@ import com.mdgd.commons.components.repo.network.INetwork;
 import com.mdgd.commons.components.repo.prefs.IPrefs;
 import com.mdgd.commons.dto.Quake;
 import com.mdgd.commons.dto.SearchDTO;
-import com.mdgd.commons.retrofit_support.ICallback;
-import com.mdgd.commons.retrofit_support.Result;
+import com.mdgd.commons.result.ICallback;
+import com.mdgd.commons.result.Result;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,10 +48,11 @@ public class RepoTestJava {
 
 //  ------------------------------------------------------------------------------------------------
     @Test
-    public void getEarthquakes() {
+    public void getEarthquakes_error_emptyDb() {
         final Date end = new Date(MOCK_TIME);
         final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
         final ArgumentCaptor<Date> endCaptor = ArgumentCaptor.forClass(Date.class);
+        final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
         final ArgumentCaptor<Date> startCaptor = ArgumentCaptor.forClass(Date.class);
         final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
 
@@ -59,10 +60,59 @@ public class RepoTestJava {
 
         Mockito.verify(network, Mockito.times(1)).getEarthquakes(startCaptor.capture(),
                 endCaptor.capture(), captor.capture());
+        captor.getValue().onResult(new Result<>(new Exception("Mock!")));
 
+        Mockito.verify(db, Mockito.times(1)).getQuakesBulk(timeCaptor.capture());
+        verifyNoInteraction();
+    }
+
+    @Test
+    public void getEarthquakes_error_dbNotEnough() {
+        final Date end = new Date(MOCK_TIME);
+        final List<Quake> quakes = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            quakes.add(new Quake());
+        }
+        Mockito.when(db.getQuakesBulk(ArgumentCaptor.forClass(Long.class).capture())).thenReturn(quakes);
+        final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
+        final ArgumentCaptor<Date> endCaptor = ArgumentCaptor.forClass(Date.class);
+        final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+        final ArgumentCaptor<Date> startCaptor = ArgumentCaptor.forClass(Date.class);
+        final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
+
+        repo.getEarthquakes(end, callback);
+
+        Mockito.verify(network, Mockito.times(1)).getEarthquakes(startCaptor.capture(),
+                endCaptor.capture(), captor.capture());
+        captor.getValue().onResult(new Result<>(new Exception("Mock!")));
+
+        Mockito.verify(db, Mockito.times(1)).getQuakesBulk(timeCaptor.capture());
+        verifyNoInteraction();
+    }
+
+    @Test
+    public void getEarthquakes_success_emptyDb() {
+        final Date end = new Date(MOCK_TIME);
+        Mockito.when(db.getQuakesBulk(ArgumentCaptor.forClass(Long.class).capture())).thenReturn(new ArrayList<>());
+        final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
+        final ArgumentCaptor<Date> endCaptor = ArgumentCaptor.forClass(Date.class);
+        final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
+        final ArgumentCaptor<Date> startCaptor = ArgumentCaptor.forClass(Date.class);
+        final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
+
+        repo.getEarthquakes(end, callback);
+
+        Mockito.verify(network, Mockito.times(1)).getEarthquakes(startCaptor.capture(),
+                endCaptor.capture(), captor.capture());
+        captor.getValue().onResult(new Result<>(new ArrayList<>()));
+
+        Mockito.verify(db, Mockito.times(1)).getQuakesBulk(timeCaptor.capture());
+        Mockito.verify(network, Mockito.times(2)).getEarthquakes(startCaptor.capture(),
+                endCaptor.capture(), captor.capture());
 
         verifyNoInteraction();
     }
+
 
 
 
@@ -93,7 +143,7 @@ public class RepoTestJava {
                 return time <= expected && time > expected - 10;
             }
         });
-        Mockito.verify(callback, Mockito.times(1)).onResult(resultCaptor.capture());
+        Mockito.verify(callback, Mockito.times(2)).onResult(resultCaptor.capture());
         Assert.assertEquals(quakes, resultCaptor.getValue().data);
         Mockito.verify(prefs, Mockito.times(2)).getLastUpdateDate();
 
@@ -130,7 +180,7 @@ public class RepoTestJava {
                 return time <= expected && time > expected - 10;
             }
         });
-        Mockito.verify(callback, Mockito.times(1)).onResult(resultCaptor.capture());
+        Mockito.verify(callback, Mockito.times(2)).onResult(resultCaptor.capture());
         Assert.assertEquals(quakes, resultCaptor.getValue().data);
         Mockito.verify(prefs, Mockito.times(2)).getLastUpdateDate();
 
@@ -346,7 +396,7 @@ public class RepoTestJava {
             quake.setDate(new Date(System.currentTimeMillis() - i * 3600_000));
             quakes.add(quake);
         }
-        Mockito.when(db.getQuakesBulk(timeCaptor.capture())).thenReturn(quakes);
+        //Mockito.when(db.getQuakesBulk(timeCaptor.capture())).thenReturn(quakes);
         Mockito.when(prefs.getLastUpdateDate()).thenReturn(MOCK_TIME);
         final ICallback<List<Quake>> callback = Mockito.mock(ICallback.class);
         final ArgumentCaptor<ICallback<List<Quake>>> captor = ArgumentCaptor.forClass(ICallback.class);
@@ -392,6 +442,7 @@ public class RepoTestJava {
     @Test
     public void save() {
         final List<Quake> quakes = new ArrayList<>();
+        quakes.add(new Quake());
 
         repo.save(quakes);
 

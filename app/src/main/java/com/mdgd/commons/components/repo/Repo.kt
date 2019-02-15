@@ -80,6 +80,6 @@ class Repo(private val network: INetwork, private val dataBase: IDataBase, priva
     }
 
     override fun save(quakes: List<Quake>) {
-        dataBase.saveQuakes(quakes)
+        if(!quakes.isEmpty()) dataBase.saveQuakes(quakes)
     }
 }

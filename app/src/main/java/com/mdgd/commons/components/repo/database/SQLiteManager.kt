@@ -45,8 +45,8 @@ class SQLiteManager (context: Context): CursorParser<Quake>(), IDataBase {
         quake.magnitude = get(c, DBHelper.COLUMN_MAGNITUDE, "")
         quake.date = Date(get(c, DBHelper.COLUMN_TIME, -1L))
 
-        quake.longitude = get(c, DBHelper.COLUMN_LNG, 0 as Double)
-        quake.latitude = get(c, DBHelper.COLUMN_LAT, 0 as Double)
+        quake.longitude = get(c, DBHelper.COLUMN_LNG, 0.0)
+        quake.latitude = get(c, DBHelper.COLUMN_LAT, 0.0)
 
         return quake
     }

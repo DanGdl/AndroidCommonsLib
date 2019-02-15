@@ -1,5 +1,6 @@
 package com.mdgd.commons.components.repo
 
+import android.util.Log
 import com.mdgd.commons.components.Constants
 import com.mdgd.commons.components.repo.database.IDataBase
 import com.mdgd.commons.components.repo.network.INetwork
@@ -19,13 +20,16 @@ import kotlin.collections.ArrayList
 class Repo(private val network: INetwork, private val dataBase: IDataBase, private val prefs: IPrefs) : IRepo {
 
     override fun getEarthquakes(end: Date, listener: ICallback<List<Quake>>) {
+        Log.d("QUAKES", "Requesting quakes")
         val start = Date(end.time)
         start.date = start.date - 1
         network.getEarthquakes(start, end, ICallback {
             if (it.isSuccess){
+                Log.d("QUAKES", "Requesting quakes success")
                 save(it.data!!)
                 queryData(listener, it.data!!, false, start.time)
             } else {
+                Log.d("QUAKES", "Requesting quakes error")
                 listener.onResult(it)  // show error
                 queryData(listener, ArrayList(), true, start.time)
             }
@@ -33,13 +37,16 @@ class Repo(private val network: INetwork, private val dataBase: IDataBase, priva
     }
 
     override fun checkNewEarthquakes(listener: ICallback<List<Quake>>) {
+        Log.d("QUAKES", "Requesting updates")
         val now = System.currentTimeMillis()
         network.checkNewEarthquakes(prefs.lastUpdateDate, ICallback {
             if(it.isSuccess) {
-                if(!it.data!!.isEmpty()) save(it.data!!)
+                Log.d("QUAKES", "Requesting updates success")
+                save(it.data!!)
                 queryData(listener, it.data!!, false, prefs.lastUpdateDate)
                 prefs.saveLastUpdateDate(now)
             } else {
+                Log.d("QUAKES", "Requesting updates error")
                 listener.onResult(it) // show error
                 queryData(listener, ArrayList(), true, prefs.lastUpdateDate)
             }

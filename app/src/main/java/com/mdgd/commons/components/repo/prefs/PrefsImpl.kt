@@ -9,7 +9,7 @@ import com.mdgd.commons.prefs.BasicPrefsImpl
  * on 02-May-17.
  */
 
-class PrefsImp(ctx: Context): BasicPrefsImpl(ctx), IPrefs {
+class PrefsImp(ctx: Context) : BasicPrefsImpl(ctx), IPrefs {
 
     companion object {
         private const val LAST_UPDATE = "last_update"
@@ -20,7 +20,7 @@ class PrefsImp(ctx: Context): BasicPrefsImpl(ctx), IPrefs {
     }
 
     override val lastUpdateDate: Long
-        get() = get(LAST_UPDATE, (System.currentTimeMillis() - Constants.TIME_RANGE))
+        get() = get(LAST_UPDATE, (System.currentTimeMillis()) - Constants.TIME_RANGE)
 
     override fun saveLastUpdateDate(millis: Long) {
         put(LAST_UPDATE, millis)

@@ -2,7 +2,7 @@ package com.mdgd.commons.components.repo;
 
 import com.mdgd.commons.DefMatcherImp;
 import com.mdgd.commons.components.Constants;
-import com.mdgd.commons.components.repo.database.IDataBase;
+import com.mdgd.commons.components.repo.db.IDataBase;
 import com.mdgd.commons.components.repo.network.INetwork;
 import com.mdgd.commons.components.repo.prefs.IPrefs;
 import com.mdgd.commons.dto.Quake;

@@ -3,6 +3,7 @@ package com.mdgd.commons.ui.main.fr.quackes
 import com.mdgd.commons.contract.fragment.FragmentContract
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.dto.SearchDTO
+import java.util.*
 
 /**
  * Created by max
@@ -11,17 +12,17 @@ import com.mdgd.commons.dto.SearchDTO
 
 class QuakesFragmentContract {
 
-    interface IView: FragmentContract.IView {
+    interface IView : FragmentContract.IView {
         fun updateEarthQuakes(quakes: List<Quake>)
     }
 
-    interface IHost: FragmentContract.IHost
+    interface IHost : FragmentContract.IHost
 
-    interface IPresenter: FragmentContract.IPresenter {
+    interface IPresenter : FragmentContract.IPresenter {
         fun getEarthQuakes(searchParams: SearchDTO?)
 
         fun checkNewEarthQuakes()
 
-        fun getNextBulk(lastDate: Long)
+        fun getNextBulk(lastDate: Date)
     }
 }

@@ -12,5 +12,5 @@ import java.util.*
 interface INetwork {
     fun getEarthquakes(start: Date, end: Date, listener: ICallback<List<Quake>>)
 
-    fun checkNewEarthquakes(lastUpdate: Long, listener: ICallback<List<Quake>>)
+    fun checkNewEarthquakes(lastUpdate: Date, listener: ICallback<List<Quake>>)
 }

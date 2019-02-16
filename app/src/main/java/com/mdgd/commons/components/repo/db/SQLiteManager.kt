@@ -1,4 +1,4 @@
-package com.mdgd.commons.components.repo.database
+package com.mdgd.commons.components.repo.db
 
 import android.content.ContentValues
 import android.content.Context
@@ -8,14 +8,15 @@ import com.mdgd.commons.components.Constants
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.sqlite.CursorParser
 import java.util.*
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 /**
  * Created by Max
  * on 30-Apr-17.
  */
 
-class SQLiteManager (context: Context): CursorParser<Quake>(), IDataBase {
-
+class SQLiteManager(context: Context) : CursorParser<Quake>(), IDataBase {
+    val lock = ReentrantReadWriteLock()
 
     private val mDbHelper: DBHelper = DBHelper(context)
 
@@ -63,37 +64,54 @@ class SQLiteManager (context: Context): CursorParser<Quake>(), IDataBase {
     }
 
     override fun saveQuakes(quakes: List<Quake>) {
-        val db = openWritable()
-        val cv = ContentValues()
-        for (quake in quakes) {
-            toContentValues(quake, cv)
+        lock.writeLock().lock()
+        try {
+            val db = openWritable()
+            db.beginTransaction()
+            try {
+                val cv = ContentValues()
+                for (quake in quakes) {
+                    toContentValues(quake, cv)
 
-            val result = db.update(DBHelper.TABLE_QUAKES, cv, DBHelper.COLUMN_QUAKE_ID + " = '" + quake.id + "'", null)
-            if (result == 0) db.insert(DBHelper.TABLE_QUAKES, null, cv)
+                    val result = db.update(DBHelper.TABLE_QUAKES, cv, DBHelper.COLUMN_QUAKE_ID + " = '" + quake.id + "'", null)
+                    if (result == 0) db.insert(DBHelper.TABLE_QUAKES, null, cv)
+                }
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
+            }
+        } finally {
+            lock.writeLock().unlock()
         }
     }
 
-    override fun getQuakesBulk(date: Long): List<Quake> {
+    override fun getQuakesBulk(date: Date): List<Quake> {
         val quakes = ArrayList<Quake>()
-        val db = openReadable()
-        val c: Cursor?
-        if (date == 0L) {
-            c = db.query(DBHelper.TABLE_QUAKES, null, null, null, null,
-                    null, DBHelper.COLUMN_TIME)
-        } else {
-            c = db.query(DBHelper.TABLE_QUAKES, null, DBHelper.COLUMN_TIME + " < ?",
-                    arrayOf(date.toString()), null, null, DBHelper.COLUMN_TIME)
-        }
-
-        if (c != null) {
-            if(c.moveToLast()) {
-                var counter = 0
-                do {
-                    quakes.add(fromCursor(c))
-                    counter++
-                } while (counter < Constants.PAGE_SIZE && c.moveToPrevious())
+        lock.readLock().lock()
+        try {
+            val db = openReadable()
+            val c: Cursor?
+            val dateMs = date.time
+            if (dateMs == 0L) {
+                c = db.query(DBHelper.TABLE_QUAKES, null, null, null, null,
+                        null, DBHelper.COLUMN_TIME)
+            } else {
+                c = db.query(DBHelper.TABLE_QUAKES, null, DBHelper.COLUMN_TIME + " < ?",
+                        arrayOf(dateMs.toString()), null, null, DBHelper.COLUMN_TIME)
             }
-            c.close()
+
+            if (c != null) {
+                if (c.moveToLast()) {
+                    var counter = 0
+                    do {
+                        quakes.add(fromCursor(c))
+                        counter++
+                    } while (counter < Constants.PAGE_SIZE && c.moveToPrevious())
+                }
+                c.close()
+            }
+        } finally {
+            lock.readLock().unlock()
         }
         return quakes
     }

@@ -7,7 +7,7 @@ import com.mdgd.commons.result.ICallback
 import com.mdgd.commons.support.v7.fragment.FragmentPresenter
 import java.util.*
 
-class QuackesFragmentPresenter(view: QuakesFragmentContract.IView, private val repo: IRepo) :
+class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val repo: IRepo) :
         FragmentPresenter<QuakesFragmentContract.IView>(view), QuakesFragmentContract.IPresenter {
 
     private var query: SearchDTO? = null
@@ -20,18 +20,17 @@ class QuackesFragmentPresenter(view: QuakesFragmentContract.IView, private val r
 
     override fun checkNewEarthQuakes() {
         view.showProgress(R.string.empty, R.string.wait_please)
-        repo.checkNewEarthquakes(com.mdgd.commons.result.ICallback {
+        repo.checkNewEarthquakes(ICallback {
             view.hideProgress()
             if (it.isFail) view.showToast(R.string.shit, it.error?.message)
             else view.updateEarthQuakes(it.data!!)
         })
     }
 
-    override fun getNextBulk(lastDate: Long) {
-        if (lastDate != -1L && (query == null || query?.isEmpty!!)) {
+    override fun getNextBulk(lastDate: Date) {
+        if ((query == null || query?.isEmpty!!)) {
             view.showProgress(R.string.empty, R.string.wait_please)
-            val end = Date(lastDate)
-            repo.getEarthquakes(end, com.mdgd.commons.result.ICallback {
+            repo.getEarthquakesBeforeDate(lastDate, ICallback {
                 view.hideProgress()
                 if (it.isFail) view.showToast(R.string.shit, it.error?.message)
                 else view.updateEarthQuakes(it.data!!)

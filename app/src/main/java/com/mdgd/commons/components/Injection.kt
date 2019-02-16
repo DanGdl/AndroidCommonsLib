@@ -2,8 +2,8 @@ package com.mdgd.commons.components
 
 import com.mdgd.commons.ui.main.SplashPresenter
 import com.mdgd.commons.ui.main.SplashScreenContract
-import com.mdgd.commons.ui.main.fr.quackes.QuackesFragmentPresenter
 import com.mdgd.commons.ui.main.fr.quackes.QuakesFragmentContract
+import com.mdgd.commons.ui.main.fr.quackes.QuakesFragmentPresenter
 import com.mdgd.commons.ui.main.fr.splash.SplashFragmentContract
 import com.mdgd.commons.ui.main.fr.splash.SplashFragmentPresenter
 
@@ -25,6 +25,6 @@ object Injection {
     }
 
     fun getQuackesPresenter(view: QuakesFragmentContract.IView): QuakesFragmentContract.IPresenter {
-        return QuackesFragmentPresenter(view, provider.getRepo())
+        return QuakesFragmentPresenter(view, provider.getRepo())
     }
 }

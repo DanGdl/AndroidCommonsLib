@@ -12,9 +12,9 @@ import java.util.*
 
 interface IRepo {
 
-    fun getEarthquakes(end: Date, listener: com.mdgd.commons.result.ICallback<List<Quake>>)
+    fun getEarthquakesBeforeDate(end: Date, callback: ICallback<List<Quake>>)
 
-    fun checkNewEarthquakes(listener: com.mdgd.commons.result.ICallback<List<Quake>>)
+    fun checkNewEarthquakes(callback: ICallback<List<Quake>>)
 
     fun getAllQuakes(searchParams: SearchDTO?): List<Quake>
 

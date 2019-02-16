@@ -30,6 +30,7 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
         QuakesFragmentContract.IView, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private var binding: FragmentRecyclerBinding? = null
+    private var currentPage: Int = 0
 
     companion object {
 
@@ -85,15 +86,18 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
     }
 
     fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+        currentPage++
         presenter?.getNextBulk((adapter as EarthQuakesAdapter).lastDate)
     }
 
     override fun updateEarthQuakes(quakes: List<Quake>) {
         binding?.toolbarInc?.toolbarIcon?.requestFocus()
-        adapter?.addItems(quakes)
+        if(currentPage == 0) adapter?.setItems(quakes)
+        else adapter?.addItems(quakes)
     }
 
     override fun onRefresh() {
+        currentPage = 0
         presenter.checkNewEarthQuakes()
     }
 

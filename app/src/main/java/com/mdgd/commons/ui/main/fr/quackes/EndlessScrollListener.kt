@@ -38,7 +38,7 @@ abstract class EndlessScrollListener : RecyclerView.OnScrollListener {
         //only trigger action if scrolling down
         if (if (!reverseDirection) dy > 0 else dy < 0) {
             val lm = recyclerView.layoutManager
-            if(lm != null) {
+            if (lm != null) {
                 val totalItemCount = lm.itemCount
                 val lastVisibleItemPosition = (lm as LinearLayoutManager).findLastVisibleItemPosition()
 

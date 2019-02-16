@@ -32,11 +32,11 @@ public class QuackesFragmentPresenterTestJava {
     @Mock
     private QuakesFragmentContract.IView view;
 
-    private QuackesFragmentPresenter presenter;
+    private QuakesFragmentPresenter presenter;
 
     @Before
     public void setUp() {
-        presenter = new QuackesFragmentPresenter(view, repo);
+        presenter = new QuakesFragmentPresenter(view, repo);
     }
 
     private void verifyNoInteraction() {

@@ -43,7 +43,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Comm
         if(items == null || items.isEmpty()) return;
         if(this.items == null) setItems(items);
         else {
-            final  int start = this.items.size();
+            final int start = this.items.size();
             this.items.addAll(items);
             notifyItemRangeInserted(start, items.size());
         }

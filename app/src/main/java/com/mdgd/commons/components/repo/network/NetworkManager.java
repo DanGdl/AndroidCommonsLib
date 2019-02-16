@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -66,31 +65,28 @@ public class NetworkManager extends BasicNetwork implements INetwork {
 
     /**
      * @param start - date in format yyyy-mm-dd
-     * @param end - date in format yyyy-mm-dd
+     * @param end   - date in format yyyy-mm-dd
      */
-    private void getEarthquakes(String start, String end, @NotNull ICallback<List<Quake>> listener){
+    private void getEarthquakes(String start, String end, @NotNull ICallback<List<Quake>> listener) {
         execAsync(mRetrofitInterface.getQuakes(start, end), listener, (@Nullable QuakesSchema body) -> {
             final List<Quake> dtos = new ArrayList<>();
-            if(body == null) return dtos;
-            for(QuakeSchema qs : body.getEarthquakes()){
+            if (body == null) return dtos;
+            for (QuakeSchema qs : body.getEarthquakes()) {
                 dtos.add(qs.fillQuake(new Quake()));
             }
             return dtos;
         });
     }
 
-    public void getEarthquakes(@NotNull Date start, @NotNull Date end, @NotNull ICallback<List<Quake>> listener){
+    public void getEarthquakes(@NotNull Date start, @NotNull Date end, @NotNull ICallback<List<Quake>> listener) {
         getEarthquakes(mSDF.format(start), mSDF.format(end), listener);
     }
 
-    private void getEarthquakes(long startDate, @NotNull ICallback<List<Quake>> listener) {
-        final Calendar cal = Calendar.getInstance();
-        if(startDate != -1) cal.setTimeInMillis(startDate);
-
-        getEarthquakes(mSDF.format(cal.getTime()), "NOW", listener);
+    private void getEarthquakes(Date startDate, @NotNull ICallback<List<Quake>> listener) {
+        getEarthquakes(mSDF.format(startDate), "NOW", listener);
     }
 
-    public void checkNewEarthquakes(long lastUpdate, @NotNull ICallback<List<Quake>> listener){
+    public void checkNewEarthquakes(@NotNull Date lastUpdate, @NotNull ICallback<List<Quake>> listener) {
         getEarthquakes(lastUpdate, listener);
     }
 }

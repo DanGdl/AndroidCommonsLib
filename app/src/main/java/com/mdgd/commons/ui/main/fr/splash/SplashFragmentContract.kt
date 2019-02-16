@@ -9,9 +9,9 @@ import com.mdgd.commons.contract.fragment.FragmentContract
 
 class SplashFragmentContract {
 
-    interface IView: FragmentContract.IView
+    interface IView : FragmentContract.IView
 
-    interface IHost: FragmentContract.IHost
+    interface IHost : FragmentContract.IHost
 
-    interface IPresenter: FragmentContract.IPresenter
+    interface IPresenter : FragmentContract.IPresenter
 }

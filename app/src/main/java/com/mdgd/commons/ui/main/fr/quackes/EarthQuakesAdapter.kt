@@ -20,9 +20,9 @@ class EarthQuakesAdapter internal constructor(context: Context, listener: Common
 
     private val mSDF = SimpleDateFormat("HH:mm, yyyy.MM.dd", Locale.getDefault())
 
-    val lastDate: Long
-        get() = if (!items.isEmpty()) items[itemCount - 1].date!!.time
-        else -1
+    val lastDate: Date
+        get() = if (items.isEmpty()) Date()
+        else items.last().date!!
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonViewHolder<Quake> {
@@ -30,7 +30,7 @@ class EarthQuakesAdapter internal constructor(context: Context, listener: Common
         return QuakeVH(cardBinding)
     }
 
-    private inner class QuakeVH internal constructor(internal val mBinding: QuakeDetailsBinding):
+    private inner class QuakeVH internal constructor(internal val mBinding: QuakeDetailsBinding) :
             CommonViewHolder<Quake>(mBinding.root), View.OnClickListener {
 
         init {

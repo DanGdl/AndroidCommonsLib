@@ -16,7 +16,6 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import com.mdgd.commons.R
 import com.mdgd.commons.components.Injection
-import com.mdgd.commons.databinding.FragmentRecyclerBinding
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.recycler.CommonRecyclerAdapter
 import com.mdgd.commons.support.v7.fragment.recycler.SwipeRecyclerFragment
@@ -118,7 +117,7 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
 //                        binding!!.searchParams!!.toTime.getText().toString(),
 //                        binding!!.searchParams!!.toDate.getText().toString(),
 //                        binding!!.searchParams!!.toMagnitude.getText().toString())
-//                presenter.getEarthQuakes(searchData);
+//                presenter.searchQuakes(searchData);
         } else if (id == R.id.fromTime) {
             TimePickerDialog(activity, { _: TimePicker, h: Int, m: Int -> binding?.searchParams?.fromTime?.text = String.format(Locale.getDefault(), "%1$2d : %2$2d", h, m) },
                     0, 0, true).show()

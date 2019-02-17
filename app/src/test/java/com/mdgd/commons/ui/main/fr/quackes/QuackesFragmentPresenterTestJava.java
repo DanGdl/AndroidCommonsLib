@@ -66,12 +66,12 @@ public class QuackesFragmentPresenterTestJava {
         quakes.add(new Quake());
         quakes.add(new Quake());
         final ArgumentCaptor<SearchDTO> paramCaptor = ArgumentCaptor.forClass(SearchDTO.class);
-        Mockito.when(repo.getAllQuakes(paramCaptor.capture())).thenReturn(quakes);
+        Mockito.when(repo.searchQuakes(paramCaptor.capture())).thenReturn(quakes);
         final ArgumentCaptor<List<Quake>> captor = ArgumentCaptor.forClass(List.class);
 
-        presenter.getEarthQuakes(params);
+        presenter.searchQuakes(params);
 
-        Mockito.verify(repo, Mockito.times(1)).getAllQuakes(params);
+        Mockito.verify(repo, Mockito.times(1)).searchQuakes(params);
         Mockito.verify(view, Mockito.times(1)).updateEarthQuakes(captor.capture());
         Assert.assertEquals(quakes, captor.getValue());
         Assert.assertEquals(params, paramCaptor.getValue());

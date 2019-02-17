@@ -24,9 +24,10 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 
 public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y extends FragmentContract.IHost> extends Fragment
         implements FragmentContract.IFragment, FragmentContract.IView {
+    protected final X presenter;
+
     private boolean hasProgress = false;
     private IProgressView progress;
-    protected final X presenter;
     protected Y host;
 
     public HostedFragment(){

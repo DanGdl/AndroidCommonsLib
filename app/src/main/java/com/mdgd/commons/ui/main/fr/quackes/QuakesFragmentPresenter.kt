@@ -12,13 +12,17 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
 
     private var query: SearchDTO? = null
 
-    override fun getEarthQuakes(searchParams: SearchDTO?) {
+    override fun searchQuakes(searchParams: SearchDTO?) {
         this.query = searchParams
-        val quakes = repo.getAllQuakes(searchParams)
-        view.updateEarthQuakes(quakes)
+        repo.searchQuakes(searchParams, ICallback {
+            view.hideProgress()
+            if (it.isFail) view.showToast(R.string.shit, it.error?.message)
+            else view.updateEarthQuakes(it.data!!)
+        })
     }
 
     override fun checkNewEarthQuakes() {
+        query = null
         view.showProgress(R.string.empty, R.string.wait_please)
         repo.checkNewEarthquakes(ICallback {
             view.hideProgress()
@@ -28,13 +32,16 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
     }
 
     override fun getNextBulk(lastDate: Date) {
-        if ((query == null || query?.isEmpty!!)) {
+        if (query == null) {
             view.showProgress(R.string.empty, R.string.wait_please)
             repo.getEarthquakesBeforeDate(lastDate, ICallback {
                 view.hideProgress()
                 if (it.isFail) view.showToast(R.string.shit, it.error?.message)
                 else view.updateEarthQuakes(it.data!!)
             })
+        } else {
+            // query.toDate = lastDate
+            // searchQuakes(query)
         }
     }
 }

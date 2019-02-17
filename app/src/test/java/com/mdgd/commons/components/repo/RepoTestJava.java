@@ -431,7 +431,7 @@ public class RepoTestJava {
     public void getAllQuakes() {
         final SearchDTO params = new SearchDTO("", "", "", "", "", "", "");
 
-        repo.getAllQuakes(params);
+        repo.searchQuakes(params);
 
         verifyNoInteraction();
     }

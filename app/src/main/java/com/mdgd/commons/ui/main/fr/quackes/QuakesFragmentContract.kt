@@ -19,7 +19,7 @@ class QuakesFragmentContract {
     interface IHost : FragmentContract.IHost
 
     interface IPresenter : FragmentContract.IPresenter {
-        fun getEarthQuakes(searchParams: SearchDTO?)
+        fun searchQuakes(searchParams: SearchDTO?)
 
         fun checkNewEarthQuakes()
 

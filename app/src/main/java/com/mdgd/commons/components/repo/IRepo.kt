@@ -16,7 +16,7 @@ interface IRepo {
 
     fun checkNewEarthquakes(callback: ICallback<List<Quake>>)
 
-    fun getAllQuakes(searchParams: SearchDTO?): List<Quake>
+    fun searchQuakes(searchParams: SearchDTO?, callback: ICallback<List<Quake>>)
 
     fun save(quakes: List<Quake>)
 }

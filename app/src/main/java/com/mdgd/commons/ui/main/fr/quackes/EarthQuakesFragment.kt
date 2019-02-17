@@ -16,6 +16,7 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import com.mdgd.commons.R
 import com.mdgd.commons.components.Injection
+import com.mdgd.commons.databinding.FragmentRecyclerBinding
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.recycler.CommonRecyclerAdapter
 import com.mdgd.commons.support.v7.fragment.recycler.SwipeRecyclerFragment
@@ -109,7 +110,7 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
     override fun onClick(view: View) {
         val id = view.id
         if (id == R.id.searchBtn) {
-//                SearchDTO searchData = SearchDTO(
+//                SearchParams searchData = SearchParams(
 //                        binding!!.toolbarInc!!.search.getText().toString(),
 //                        binding!!.searchParams!!.fromTime.getText().toString(),
 //                        binding!!.searchParams!!.fromDate.getText().toString(),

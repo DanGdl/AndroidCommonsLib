@@ -6,7 +6,7 @@ import com.mdgd.commons.components.repo.db.IDataBase;
 import com.mdgd.commons.components.repo.network.INetwork;
 import com.mdgd.commons.components.repo.prefs.IPrefs;
 import com.mdgd.commons.dto.Quake;
-import com.mdgd.commons.dto.SearchDTO;
+import com.mdgd.commons.dto.SearchParams;
 import com.mdgd.commons.result.ICallback;
 import com.mdgd.commons.result.Result;
 
@@ -429,7 +429,7 @@ public class RepoTestJava {
 //  ------------------------------------------------------------------------------------------------
     @Test
     public void getAllQuakes() {
-        final SearchDTO params = new SearchDTO("", "", "", "", "", "", "");
+        final SearchParams params = new SearchParams("", "", "", "", "", "", "");
 
         repo.searchQuakes(params);
 

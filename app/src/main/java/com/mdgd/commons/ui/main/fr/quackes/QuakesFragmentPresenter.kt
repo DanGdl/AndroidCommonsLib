@@ -2,7 +2,7 @@ package com.mdgd.commons.ui.main.fr.quackes
 
 import com.mdgd.commons.R
 import com.mdgd.commons.components.repo.IRepo
-import com.mdgd.commons.dto.SearchDTO
+import com.mdgd.commons.dto.SearchParams
 import com.mdgd.commons.result.ICallback
 import com.mdgd.commons.support.v7.fragment.FragmentPresenter
 import java.util.*
@@ -10,10 +10,12 @@ import java.util.*
 class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val repo: IRepo) :
         FragmentPresenter<QuakesFragmentContract.IView>(view), QuakesFragmentContract.IPresenter {
 
-    private var query: SearchDTO? = null
-
-    override fun searchQuakes(searchParams: SearchDTO?) {
-        this.query = searchParams
+    override fun searchQuakes(searchParams: SearchParams?) {
+        if (searchParams == null) {
+            checkNewEarthQuakes()
+            return
+        }
+        view.showProgress(R.string.empty, R.string.wait_please)
         repo.searchQuakes(searchParams, ICallback {
             view.hideProgress()
             if (it.isFail) view.showToast(R.string.shit, it.error?.message)
@@ -22,9 +24,8 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
     }
 
     override fun checkNewEarthQuakes() {
-        query = null
         view.showProgress(R.string.empty, R.string.wait_please)
-        repo.checkNewEarthquakes(ICallback {
+        repo.searchQuakes(SearchParams("", repo.getPrefs().lastUpdateDate), ICallback {
             view.hideProgress()
             if (it.isFail) view.showToast(R.string.shit, it.error?.message)
             else view.updateEarthQuakes(it.data!!)
@@ -32,16 +33,17 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
     }
 
     override fun getNextBulk(lastDate: Date) {
-        if (query == null) {
-            view.showProgress(R.string.empty, R.string.wait_please)
-            repo.getEarthquakesBeforeDate(lastDate, ICallback {
-                view.hideProgress()
-                if (it.isFail) view.showToast(R.string.shit, it.error?.message)
-                else view.updateEarthQuakes(it.data!!)
-            })
-        } else {
-            // query.toDate = lastDate
-            // searchQuakes(query)
-        }
+        view.showProgress(R.string.empty, R.string.wait_please)
+        repo.getEarthquakesBeforeDate(SearchParams("", lastDate.time), ICallback {
+            view.hideProgress()
+            if (it.isFail) view.showToast(R.string.shit, it.error?.message)
+            else view.updateEarthQuakes(it.data!!)
+        })
+        // view.showProgress(R.string.empty, R.string.wait_please)
+        // repo.getEarthquakesBeforeDate(SearchParams("", lastDate.time), ICallback {
+        //     view.hideProgress()
+        //     if (it.isFail) view.showToast(R.string.shit, it.error?.message)
+        //     else view.updateEarthQuakes(it.data!!)
+        // })
     }
 }

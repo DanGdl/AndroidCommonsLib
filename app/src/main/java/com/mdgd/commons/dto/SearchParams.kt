@@ -7,17 +7,17 @@ import android.text.TextUtils
  * on 2/2/18.
  */
 
-class SearchParams(val query: String = "", val fromDate: Long = DEF_TIME,
-                   val fromMagnitude: String = "", val toDate: Long = DEF_TIME,
-                   val toMagnitude: String = "") {
+class SearchParams(val query: String = "", val stDate: Long = DEF_TIME,
+                   val stMag: String = "", val endDate: Long = DEF_TIME,
+                   val endMag: String = "") {
 
     val isEmpty: Boolean
-        get() = (TextUtils.isEmpty(query) && fromDate == DEF_TIME
-                && TextUtils.isEmpty(fromMagnitude) && toDate == -DEF_TIME && TextUtils.isEmpty(toMagnitude))
+        get() = (TextUtils.isEmpty(query) && stDate == DEF_TIME
+                && TextUtils.isEmpty(stMag) && endDate == -DEF_TIME && TextUtils.isEmpty(endMag))
 
     fun isRegular(): Boolean {
-        return (TextUtils.isEmpty(query) && fromDate != DEF_TIME
-                && TextUtils.isEmpty(fromMagnitude) && toDate == DEF_TIME && TextUtils.isEmpty(toMagnitude))
+        return (TextUtils.isEmpty(query) && stDate != DEF_TIME
+                && TextUtils.isEmpty(stMag) && endDate == DEF_TIME && TextUtils.isEmpty(endMag))
     }
 
     companion object {

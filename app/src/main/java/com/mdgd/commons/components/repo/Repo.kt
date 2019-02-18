@@ -23,21 +23,21 @@ class Repo(private val network: INetwork, private val dataBase: IDataBase, priva
     }
 
     override fun getEarthquakesBeforeDate(params: SearchParams, callback: ICallback<List<Quake>>) {
-        queryData(callback, false, params, params.toDate)
+        queryData(callback, false, params, params.endDate)
     }
 
     override fun searchQuakes(params: SearchParams, callback: ICallback<List<Quake>>) {
-        val now = if (params.toDate == SearchParams.DEF_TIME) System.currentTimeMillis() else params.toDate
-        Log.d("QUERY", "S From ${Date(params.fromDate)} till ${Date()}")
-        network.checkNewEarthquakes(Date(params.fromDate), ICallback {
+        val now = if (params.endDate == SearchParams.DEF_TIME) System.currentTimeMillis() else params.endDate
+        Log.d("QUERY", "S From ${Date(params.stDate)} till ${Date()}")
+        network.checkNewEarthquakes(Date(params.stDate), ICallback {
             if (it.isSuccess) {
                 save(it.data!!)
-                val paramsUpd = SearchParams(params.query, params.fromDate, params.fromMagnitude, now, params.toMagnitude)
+                val paramsUpd = SearchParams(params.query, params.stDate, params.stMag, now, params.endMag)
                 queryData(callback, false, paramsUpd, now)
                 prefs.saveLastUpdateDate(now)
             } else {
                 callback.onResult(it) // show error
-                queryData(callback, true, params, params.fromDate)
+                queryData(callback, true, params, params.stDate)
             }
         })
     }
@@ -52,22 +52,33 @@ class Repo(private val network: INetwork, private val dataBase: IDataBase, priva
         when (quakes.size) {
             in Constants.PAGE_SIZE..Int.MAX_VALUE -> callback.onResult(Result(quakes.subList(0, Constants.PAGE_SIZE)))
             else -> { // there is not enough in db
-                val toDate = if (quakes.isEmpty()) params.fromDate else quakes.last().date!!.time // avoid duplicate requests
-                val paramsUpd = SearchParams(params.query, params.fromDate, params.fromMagnitude, toDate, params.toMagnitude)
+                val toDate = getEndDate(quakes, params.stDate, params.endDate) // avoid duplicate requests,
+                val paramsUpd = SearchParams(params.query, params.stDate, params.stMag, toDate, params.endMag)
                 getEarthquakes(paramsUpd, callback, initialStartDate)
             }
         }
     }
 
+    private fun getEndDate(quakes: List<Quake>, stDate: Long, endDate: Long): Long {
+        return if (quakes.isEmpty())
+            if (stDate == SearchParams.DEF_TIME) endDate
+            else stDate
+        else {
+            val time = quakes.last().date!!.time
+            if (time < stDate || stDate == SearchParams.DEF_TIME) time
+            else stDate
+        }
+    }
+
     private fun getEarthquakes(params: SearchParams, callback: ICallback<List<Quake>>, initialStartDate: Long) {
-        val start = Date(params.toDate)
+        val start = Date(params.endDate)
         start.hours = start.hours - Constants.TIME_STEP
-        val end = Date(params.toDate)
+        val end = Date(params.endDate)
         Log.d("QUERY", "U From $start till $end")
         network.getEarthquakes(start, end, ICallback {
             if (it.isSuccess) {
                 save(it.data!!)
-                val paramsUpd = SearchParams(params.query, start.time, params.fromMagnitude, end.time, params.toMagnitude)
+                val paramsUpd = SearchParams(params.query, start.time, params.stMag, start.time, params.endMag)
                 queryData(callback, false, paramsUpd, initialStartDate)
             } else callback.onResult(it)  // show error
         })

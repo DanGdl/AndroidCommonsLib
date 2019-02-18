@@ -113,11 +113,11 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
 //                SearchParams searchData = SearchParams(
 //                        binding!!.toolbarInc!!.search.getText().toString(),
 //                        binding!!.searchParams!!.fromTime.getText().toString(),
-//                        binding!!.searchParams!!.fromDate.getText().toString(),
-//                        binding!!.searchParams!!.fromMagnitude.getText().toString(),
+//                        binding!!.searchParams!!.stDate.getText().toString(),
+//                        binding!!.searchParams!!.stMag.getText().toString(),
 //                        binding!!.searchParams!!.toTime.getText().toString(),
-//                        binding!!.searchParams!!.toDate.getText().toString(),
-//                        binding!!.searchParams!!.toMagnitude.getText().toString())
+//                        binding!!.searchParams!!.endDate.getText().toString(),
+//                        binding!!.searchParams!!.endMag.getText().toString())
 //                presenter.searchQuakes(searchData);
         } else if (id == R.id.fromTime) {
             TimePickerDialog(activity, { _: TimePicker, h: Int, m: Int -> binding?.searchParams?.fromTime?.text = String.format(Locale.getDefault(), "%1$2d : %2$2d", h, m) },

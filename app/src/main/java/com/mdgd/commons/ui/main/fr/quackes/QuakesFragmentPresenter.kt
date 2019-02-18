@@ -34,7 +34,7 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
 
     override fun getNextBulk(lastDate: Date) {
         view.showProgress(R.string.empty, R.string.wait_please)
-        repo.getEarthquakesBeforeDate(SearchParams("", lastDate.time), ICallback {
+        repo.getEarthquakesBeforeDate(SearchParams("", SearchParams.DEF_TIME, "", lastDate.time), ICallback {
             view.hideProgress()
             if (it.isFail) view.showToast(R.string.shit, it.error?.message)
             else view.updateEarthQuakes(it.data!!)

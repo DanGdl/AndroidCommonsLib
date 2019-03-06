@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil
 import android.view.View
 import android.view.ViewGroup
 import com.mdgd.commons.R
-import com.mdgd.commons.databinding.QuakeDetailsBinding
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.recycler.CommonRecyclerAdapter
 import com.mdgd.commons.recycler.CommonViewHolder

@@ -47,21 +47,21 @@ public class PermissionItem {
         this.hint = hint;
     }
 
-    public boolean hasPermission(Activity activity){
-        if(permissions != null){
+    public boolean hasPermission(Activity activity) {
+        if (permissions != null) {
             boolean hasPermission = true;
-            for(String permission : permissions){
+            for (String permission : permissions) {
                 hasPermission = hasPermission && activity.checkPermission(permission, Process.myPid(), Process.myUid()) == PackageManager.PERMISSION_GRANTED;
             }
             return hasPermission;
-        }
-        else if(action != null) return action.hasPermission(activity);
+        } else if (action != null) return action.hasPermission(activity);
         return false;
     }
 
     public void requestPermission(Activity activity) {
         if (permissions != null) {
-            if (doNotAskAgainOff) PermissionsUtil.requestPermissionsIfNeed(activity, rcCode, permissions);
+            if (doNotAskAgainOff)
+                PermissionsUtil.requestPermissionsIfNeed(activity, rcCode, permissions);
             else {
                 final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 intent.setData(Uri.parse("package:" + activity.getPackageName()));
@@ -76,9 +76,9 @@ public class PermissionItem {
     }
 
     public boolean containsPermission(String permission) {
-        if(permissions == null || TextUtils.isEmpty(permission)) return false;
-        for(String p : permissions){
-            if(p.equals(permission)) return true;
+        if (permissions == null || TextUtils.isEmpty(permission)) return false;
+        for (String p : permissions) {
+            if (p.equals(permission)) return true;
         }
         return false;
     }

@@ -4,7 +4,7 @@
     <string name="quake_time">Quake Time</string>
     <string name="quake_details">Magnitude %1$s \n %2$s \n %3$s</string>
     <string name="shit">Shit happens! %1s</string>
-    <string name="empty"/>
+    <string name="empty" />
     <string name="quake_desc">Description</string>
     <string name="date_time">Date and Time</string>
     <string name="magnitude">Magnitude</string>

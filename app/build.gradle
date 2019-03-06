@@ -12,7 +12,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    lintOptions{
+    lintOptions {
         disable 'GoogleAppIndexingWarning'
     }
     buildTypes {
@@ -73,6 +73,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.22.0'
 
 
+    implementation project(':bus')
     implementation project(':capture')
     implementation project(':commons-support-v7')
     implementation project(':contract')

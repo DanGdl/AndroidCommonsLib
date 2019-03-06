@@ -8,7 +8,7 @@ import com.mdgd.commons.contract.services.ServiceContract;
  * on 13/06/2018.
  */
 @Deprecated
-public abstract class CommonTask<T extends ServiceContract.IPresenter> extends GcmTaskService  implements ServiceContract.IService {
+public abstract class CommonTask<T extends ServiceContract.IPresenter> extends GcmTaskService implements ServiceContract.IService {
 
     protected final T presenter;
 

@@ -10,7 +10,7 @@ import com.mdgd.commons.contract.mvp.ViewContract;
 public abstract class Presenter<T extends ViewContract.IView> implements ViewContract.IPresenter {
     protected final T view;
 
-    public Presenter(T view){
+    public Presenter(T view) {
         this.view = view;
     }
 }

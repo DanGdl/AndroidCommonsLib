@@ -14,12 +14,13 @@ import android.support.v4.app.NotificationCompat;
 public class ForegroundDelegate {
 
     public NotificationCompat.Builder setupServiceNotificationAndChannel(Context ctx, String channelName, String channelId,
-                                                                          int channelImportance, int notificationPriority,
-                                                                          int iconResId, int titleResId, int txtResId) {
+                                                                         int channelImportance, int notificationPriority,
+                                                                         int iconResId, int titleResId, int txtResId) {
         createNotificationChannel(ctx, channelName, channelId, channelImportance);
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, channelId);
         builder.setAutoCancel(false);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) builder.setPriority(notificationPriority);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            builder.setPriority(notificationPriority);
         builder.setCategory(Notification.CATEGORY_SERVICE);
         builder.setSmallIcon(iconResId);
         builder.setOngoing(true);
@@ -29,11 +30,11 @@ public class ForegroundDelegate {
     }
 
     public void createNotificationChannel(Context ctx, String channelName, String channelId, int channelImportance) {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
         final NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        if(manager == null) return;
+        if (manager == null) return;
         final NotificationChannel channel = manager.getNotificationChannel(channelId);
-        if(channel == null) {
+        if (channel == null) {
             final NotificationChannel chan = new NotificationChannel(channelId, channelName, channelImportance);
             manager.createNotificationChannel(chan);
         }

@@ -26,7 +26,7 @@ public class BasicNetwork {
         final RetroCallbackImpl<T, X> callbackImpl = new RetroCallbackImpl<>(callback, transform);
         try {
             callbackImpl.onResponse(call, call.execute());
-        } catch (Throwable e){
+        } catch (Throwable e) {
             callbackImpl.onFailure(call, e);
         }
     }

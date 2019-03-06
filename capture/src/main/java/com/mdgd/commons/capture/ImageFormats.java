@@ -7,9 +7,9 @@ import android.graphics.Bitmap;
  * on 29/04/2018.
  */
 public enum ImageFormats {
-    JPEG    ("jpeg", Bitmap.CompressFormat.JPEG),
-    PNG     ("png", Bitmap.CompressFormat.PNG),
-    WEBP    ("webp", Bitmap.CompressFormat.WEBP);
+    JPEG("jpeg", Bitmap.CompressFormat.JPEG),
+    PNG("png", Bitmap.CompressFormat.PNG),
+    WEBP("webp", Bitmap.CompressFormat.WEBP);
 
     ImageFormats(String suffix, Bitmap.CompressFormat format) {
         this.suffix = suffix;

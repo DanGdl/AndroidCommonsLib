@@ -18,9 +18,12 @@ public class FragmentContract {
         boolean isFinishing();
     }
 
-    public interface IPresenter {}
+    public interface IPresenter {
+    }
 
-    public interface IFragment extends IProgressContainer {}
+    public interface IFragment extends IProgressContainer {
+    }
 
-    public interface IView extends IProgressContainer, IToast {}
+    public interface IView extends IProgressContainer, IToast {
+    }
 }

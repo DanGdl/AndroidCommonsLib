@@ -30,7 +30,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     private IProgressView progress;
     protected Y host;
 
-    public HostedFragment(){
+    public HostedFragment() {
         presenter = getPresenter();
     }
 
@@ -40,7 +40,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @SuppressWarnings("unchecked")
     public void onAttach(Context context) {
         super.onAttach(context);
-        host = (Y)context;
+        host = (Y) context;
     }
 
     @Nullable
@@ -53,7 +53,8 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
 
     protected abstract int getLayoutResId();
 
-    protected void initViews(final View v){}
+    protected void initViews(final View v) {
+    }
 
     @Override
     public boolean hasProgress() {
@@ -80,8 +81,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
         try {
             if (progress == null) progress = createProgressView(title, message);
             if (!progress.isShowing() && host != null && !host.isFinishing()) progress.show();
-        }
-        catch (Throwable e){
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -93,7 +93,7 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @Override
     @CallSuper
     public void hideProgress() {
-        if(progress != null && progress.isShowing() && host != null && !host.isFinishing()){
+        if (progress != null && progress.isShowing() && host != null && !host.isFinishing()) {
             progress.dismiss();
             progress = null;
         }
@@ -102,13 +102,13 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @Override
     public void showToast(int msgRes) {
         final Context ctx = getActivity();
-        if(ctx != null) Toast.makeText(ctx, msgRes, Toast.LENGTH_LONG).show();
+        if (ctx != null) Toast.makeText(ctx, msgRes, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showToast(int msgRes, String query) {
         final Context ctx = getActivity();
-        if(ctx != null) Toast.makeText(ctx, getString(msgRes, query), Toast.LENGTH_LONG).show();
+        if (ctx != null) Toast.makeText(ctx, getString(msgRes, query), Toast.LENGTH_LONG).show();
     }
 
 

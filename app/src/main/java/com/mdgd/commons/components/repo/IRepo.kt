@@ -12,7 +12,7 @@ import com.mdgd.commons.result.ICallback
 
 interface IRepo {
 
-    fun getPrefs():IPrefs
+    fun getPrefs(): IPrefs
 
     fun getEarthquakesBeforeDate(params: SearchParams, callback: ICallback<List<Quake>>)
 

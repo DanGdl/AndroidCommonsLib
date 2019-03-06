@@ -10,7 +10,7 @@ import com.mdgd.commons.contract.fragment.FragmentContract;
 public abstract class FragmentPresenter<T extends FragmentContract.IView> implements FragmentContract.IPresenter {
     protected final T view;
 
-    public FragmentPresenter(T view){
+    public FragmentPresenter(T view) {
         this.view = view;
     }
 }

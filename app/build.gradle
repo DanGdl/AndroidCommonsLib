@@ -87,7 +87,7 @@ dependencies {
     implementation project(':sqlite')
     implementation project(':tasks')
     implementation project(':utilities')
-    implementation project('::result')
+    implementation project(':result')
     implementation project(':retrofit_support')
 }
 

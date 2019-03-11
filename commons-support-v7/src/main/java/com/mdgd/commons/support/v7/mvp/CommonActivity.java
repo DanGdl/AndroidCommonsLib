@@ -21,8 +21,8 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 
 public abstract class CommonActivity<T extends ViewContract.IPresenter> extends AppCompatActivity
         implements ViewContract.IView {
+    protected boolean onForeground = false;
     private boolean hasProgress = true;
-    private boolean onForeground = false;
     protected final T presenter;
     private IProgressView progress;
 

@@ -3,7 +3,7 @@ package com.mdgd.commons.ui.main.fr.quackes;
 import com.mdgd.commons.R;
 import com.mdgd.commons.components.repo.IRepo;
 import com.mdgd.commons.dto.Quake;
-import com.mdgd.commons.dto.SearchDTO;
+import com.mdgd.commons.dto.SearchParams;
 import com.mdgd.commons.result.ICallback;
 import com.mdgd.commons.result.Result;
 
@@ -61,17 +61,17 @@ public class QuackesFragmentPresenterTestJava {
 
     @Test
     public void getEarthQuakes() {
-        final SearchDTO params = new SearchDTO("", "", "", "", "", "", "");
+        final SearchParams params = new SearchParams("", "", "", "", "", "", "");
         final List<Quake> quakes = new ArrayList<>();
         quakes.add(new Quake());
         quakes.add(new Quake());
-        final ArgumentCaptor<SearchDTO> paramCaptor = ArgumentCaptor.forClass(SearchDTO.class);
-        Mockito.when(repo.getAllQuakes(paramCaptor.capture())).thenReturn(quakes);
+        final ArgumentCaptor<SearchParams> paramCaptor = ArgumentCaptor.forClass(SearchParams.class);
+        Mockito.when(repo.searchQuakes(paramCaptor.capture())).thenReturn(quakes);
         final ArgumentCaptor<List<Quake>> captor = ArgumentCaptor.forClass(List.class);
 
-        presenter.getEarthQuakes(params);
+        presenter.searchQuakes(params);
 
-        Mockito.verify(repo, Mockito.times(1)).getAllQuakes(params);
+        Mockito.verify(repo, Mockito.times(1)).searchQuakes(params);
         Mockito.verify(view, Mockito.times(1)).updateEarthQuakes(captor.capture());
         Assert.assertEquals(quakes, captor.getValue());
         Assert.assertEquals(params, paramCaptor.getValue());

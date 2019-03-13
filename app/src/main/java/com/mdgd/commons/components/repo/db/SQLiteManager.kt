@@ -85,13 +85,12 @@ class SQLiteManager(context: Context) : CursorParser<Quake>(), IDataBase {
         }
     }
 
-    override fun getQuakesBulk(date: Date): List<Quake> {
+    override fun getQuakesBulk(dateMs: Long): List<Quake> {
         val quakes = ArrayList<Quake>()
         lock.readLock().lock()
         try {
             val db = openReadable()
             val c: Cursor?
-            val dateMs = date.time
             if (dateMs == 0L) {
                 c = db.query(DBHelper.TABLE_QUAKES, null, null, null, null,
                         null, DBHelper.COLUMN_TIME)

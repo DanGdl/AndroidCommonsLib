@@ -16,7 +16,6 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import com.mdgd.commons.R
 import com.mdgd.commons.components.Injection
-import com.mdgd.commons.databinding.FragmentRecyclerBinding
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.recycler.CommonRecyclerAdapter
 import com.mdgd.commons.support.v7.fragment.recycler.SwipeRecyclerFragment
@@ -92,7 +91,7 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
 
     override fun updateEarthQuakes(quakes: List<Quake>) {
         binding?.toolbarInc?.toolbarIcon?.requestFocus()
-        if(currentPage == 0) adapter?.setItems(quakes)
+        if (currentPage == 0) adapter?.setItems(quakes)
         else adapter?.addItems(quakes)
     }
 
@@ -110,15 +109,15 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
     override fun onClick(view: View) {
         val id = view.id
         if (id == R.id.searchBtn) {
-//                SearchDTO searchData = SearchDTO(
+//                SearchParams searchData = SearchParams(
 //                        binding!!.toolbarInc!!.search.getText().toString(),
 //                        binding!!.searchParams!!.fromTime.getText().toString(),
-//                        binding!!.searchParams!!.fromDate.getText().toString(),
-//                        binding!!.searchParams!!.fromMagnitude.getText().toString(),
+//                        binding!!.searchParams!!.stDate.getText().toString(),
+//                        binding!!.searchParams!!.stMag.getText().toString(),
 //                        binding!!.searchParams!!.toTime.getText().toString(),
-//                        binding!!.searchParams!!.toDate.getText().toString(),
-//                        binding!!.searchParams!!.toMagnitude.getText().toString())
-//                presenter.getEarthQuakes(searchData);
+//                        binding!!.searchParams!!.endDate.getText().toString(),
+//                        binding!!.searchParams!!.endMag.getText().toString())
+//                presenter.searchQuakes(searchData);
         } else if (id == R.id.fromTime) {
             TimePickerDialog(activity, { _: TimePicker, h: Int, m: Int -> binding?.searchParams?.fromTime?.text = String.format(Locale.getDefault(), "%1$2d : %2$2d", h, m) },
                     0, 0, true).show()

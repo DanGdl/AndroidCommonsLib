@@ -87,7 +87,7 @@ public class TakePictureDelegate {
         chooserDialogTitle = chooserTitle == null ? getChooserTitle() : chooserTitle;
     }
 
-    private Activity getActivity(){
+    private Activity getActivity() {
         return ctx == null ? ctxSupport : ctx;
     }
 
@@ -115,7 +115,7 @@ public class TakePictureDelegate {
         }
     }
 
-    protected String getChooserTitle(){
+    protected String getChooserTitle() {
         return getActivity().getString(R.string.select_image);
     }
 
@@ -123,22 +123,20 @@ public class TakePictureDelegate {
         final boolean permissionsGranted = PermissionsUtil.areAllPermissionsGranted(grantResults);
         if (requestCode == PRC_CAPTURE && permissionsGranted) {
             makePicture();
-        }
-        else if (requestCode == PRC_SELECT && permissionsGranted) {
+        } else if (requestCode == PRC_SELECT && permissionsGranted) {
             selectFromGallery();
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != Activity.RESULT_OK){
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
         if (requestCode == RC_CAPTURE) {
             fetchNewImage(data);
-        }
-        else if (requestCode == RC_SELECT) {
+        } else if (requestCode == RC_SELECT) {
             if (data != null && data.getData() != null) {
-                if(funcOnImageObtained != null) {
+                if (funcOnImageObtained != null) {
                     funcOnImageObtained.onImageObtained(data.getData());
                 }
             }
@@ -152,7 +150,7 @@ public class TakePictureDelegate {
             final File dir = getSavePictureFile();
             boolean b = dir.exists() || dir.mkdirs();
 
-            final File file = new File(dir,System.currentTimeMillis() + imgFormat.suffix);
+            final File file = new File(dir, System.currentTimeMillis() + imgFormat.suffix);
             b = file.exists() || file.createNewFile();
 
             final BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
@@ -160,26 +158,22 @@ public class TakePictureDelegate {
             bos.flush();
             bos.close();
 
-            if(funcOnImageObtained != null) {
+            if (funcOnImageObtained != null) {
                 funcOnImageObtained.onImageObtained(Uri.fromFile(file));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private File getSavePictureFile() {
-        if(funcImageDir != null){
+        if (funcImageDir != null) {
             return funcImageDir.getSavePictureDirectory();
-        }
-        else if(funcImagePath != null){
+        } else if (funcImagePath != null) {
             return new File(funcImagePath.getSavePictureDirectoryPath());
-        }
-        else if(!TextUtils.isEmpty(imagePath)){
+        } else if (!TextUtils.isEmpty(imagePath)) {
             return new File(imagePath);
-        }
-        else {
+        } else {
             return new File(Environment.getDataDirectory() + "/Pictures");
         }
     }
@@ -213,12 +207,12 @@ public class TakePictureDelegate {
         private IOnImageObtained onImageObtained;
         private String chooserTitle;
 
-        public Builder(Activity activity){
+        public Builder(Activity activity) {
             this.activity = activity;
             this.activitySupport = null;
         }
 
-        public Builder(AppCompatActivity activity){
+        public Builder(AppCompatActivity activity) {
             this.activitySupport = activity;
             this.activity = null;
         }
@@ -226,7 +220,7 @@ public class TakePictureDelegate {
         /**
          * default value ImageFormats.JPEG
          */
-        public Builder setPictureFormat(ImageFormats format){
+        public Builder setPictureFormat(ImageFormats format) {
             this.format = format;
             return this;
         }
@@ -235,7 +229,7 @@ public class TakePictureDelegate {
          * priority low
          * default value Environment.getDataDirectory() + "/Pictures"
          */
-        public Builder setSavePictureDirectory(String path){
+        public Builder setSavePictureDirectory(String path) {
             this.savePicDirPath = path;
             return this;
         }
@@ -244,7 +238,7 @@ public class TakePictureDelegate {
          * priority medium
          * default value Environment.getDataDirectory() + "/Pictures"
          */
-        public Builder setSavePictureDirectory(ISavePicturePath path){
+        public Builder setSavePictureDirectory(ISavePicturePath path) {
             this.savePicDirPathFun = path;
             return this;
         }
@@ -253,7 +247,7 @@ public class TakePictureDelegate {
          * priority high
          * default value Environment.getDataDirectory() + "/Pictures"
          */
-        public Builder setSavePictureDirectory(ISavePictureDirectory directory){
+        public Builder setSavePictureDirectory(ISavePictureDirectory directory) {
             this.savePicDir = directory;
             return this;
         }
@@ -261,7 +255,7 @@ public class TakePictureDelegate {
         /**
          * default value 101
          */
-        public Builder setRequestCodePermissionSelectFromGallery(int requestCodePermissionSelectFromGallery){
+        public Builder setRequestCodePermissionSelectFromGallery(int requestCodePermissionSelectFromGallery) {
             this.rcPermissionSelect = requestCodePermissionSelectFromGallery;
             return this;
         }
@@ -269,7 +263,7 @@ public class TakePictureDelegate {
         /**
          * default value 102
          */
-        public Builder setRequestCodePermissionCamera(int requestCodePermissionCamera){
+        public Builder setRequestCodePermissionCamera(int requestCodePermissionCamera) {
             this.rcPermissionCamera = requestCodePermissionCamera;
             return this;
         }
@@ -277,7 +271,7 @@ public class TakePictureDelegate {
         /**
          * default value 103
          */
-        public Builder setRequestCodeSelect(int requestCodeSelect){
+        public Builder setRequestCodeSelect(int requestCodeSelect) {
             this.requestCodeSelect = requestCodeSelect;
             return this;
         }
@@ -285,12 +279,12 @@ public class TakePictureDelegate {
         /**
          * default value 104
          */
-        public Builder setRequestCodeCapture(int requestCodeCapture){
+        public Builder setRequestCodeCapture(int requestCodeCapture) {
             this.requestCodeCapture = requestCodeCapture;
             return this;
         }
 
-        public Builder setOnImageObtained(IOnImageObtained listener){
+        public Builder setOnImageObtained(IOnImageObtained listener) {
             this.onImageObtained = listener;
             return this;
         }
@@ -298,17 +292,16 @@ public class TakePictureDelegate {
         /**
          * default value "Select image"
          */
-        public Builder setChooserTitle(String chooserTitle){
+        public Builder setChooserTitle(String chooserTitle) {
             this.chooserTitle = chooserTitle;
             return this;
         }
 
-        public TakePictureDelegate build(){
-            if(activity == null){
+        public TakePictureDelegate build() {
+            if (activity == null) {
                 return new TakePictureDelegate(activitySupport, format, savePicDirPath, savePicDirPathFun,
                         savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained, chooserTitle);
-            }
-            else {
+            } else {
                 return new TakePictureDelegate(activity, format, savePicDirPath, savePicDirPathFun,
                         savePicDir, rcPermissionCamera, rcPermissionSelect, requestCodeCapture, requestCodeSelect, onImageObtained, chooserTitle);
             }

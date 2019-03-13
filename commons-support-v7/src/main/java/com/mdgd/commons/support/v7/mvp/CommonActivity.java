@@ -21,12 +21,12 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 
 public abstract class CommonActivity<T extends ViewContract.IPresenter> extends AppCompatActivity
         implements ViewContract.IView {
+    protected boolean onForeground = false;
     private boolean hasProgress = true;
-    private boolean onForeground = false;
     protected final T presenter;
     private IProgressView progress;
 
-    public CommonActivity(){
+    public CommonActivity() {
         presenter = getPresenter();
     }
 
@@ -47,7 +47,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         onForeground = false;
         super.onPause();
     }
@@ -78,7 +78,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     @Override
-    public void showProgress(){
+    public void showProgress() {
         showProgress("", "");
     }
 
@@ -92,8 +92,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         try {
             if (progress == null) progress = createProgressView(title, message);
             if (onForeground && !progress.isShowing() && !isFinishing()) progress.show();
-        }
-        catch (Throwable e){
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -103,20 +102,20 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     @Override
-    public void hideProgress(){
-        if(progress != null && progress.isShowing() && !isFinishing()){
+    public void hideProgress() {
+        if (progress != null && progress.isShowing() && !isFinishing()) {
             progress.dismiss();
             progress = null;
         }
     }
 
     @Override
-    public void showToast(int msgRes){
+    public void showToast(int msgRes) {
         Toast.makeText(this, msgRes, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showToast(int msgRes, String query){
+    public void showToast(int msgRes, String query) {
         Toast.makeText(this, getString(msgRes, query), Toast.LENGTH_SHORT).show();
     }
 
@@ -136,7 +135,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     protected void addFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        if(fragment instanceof DialogFragment) {
+        if (fragment instanceof DialogFragment) {
             ((DialogFragment) fragment).show(getSupportFragmentManager(), backStackTag);
         } else {
             getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
@@ -177,7 +176,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         removeFragment(fragment, false, null);
     }
 
-    protected int getFragmentContainerId(){
+    protected int getFragmentContainerId() {
         return R.id.fragmentContainer;
     }
 }

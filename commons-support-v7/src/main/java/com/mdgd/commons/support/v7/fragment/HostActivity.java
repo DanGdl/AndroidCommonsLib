@@ -16,7 +16,7 @@ import java.util.List;
  * on 25/07/2017.
  */
 
-public abstract class HostActivity<T extends ViewContract.IPresenter> extends CommonActivity<T> implements  FragmentContract.IHost {
+public abstract class HostActivity<T extends ViewContract.IPresenter> extends CommonActivity<T> implements FragmentContract.IHost {
 
     protected View container;
 
@@ -25,24 +25,25 @@ public abstract class HostActivity<T extends ViewContract.IPresenter> extends Co
         super.onCreate(savedInstanceState);
 
         container = findViewById(getFragmentContainerId());
-        if(savedInstanceState == null) addFirstFragment();
+        if (savedInstanceState == null) addFirstFragment();
         else {
             final List<Fragment> fragments = getSupportFragmentManager().getFragments();
-            if(fragments.isEmpty()) addFirstFragment();
+            if (fragments.isEmpty()) addFirstFragment();
             else restoreFragments(fragments);
         }
     }
 
     protected void addFirstFragment() {
         final Fragment f = getFirstFragment();
-        if(f == null) return;
+        if (f == null) return;
         addFragment(f, false, "firstFragment");
     }
 
-    protected void restoreFragments(List<Fragment> fragments){}
+    protected void restoreFragments(List<Fragment> fragments) {
+    }
 
     @Override
-    protected int getLayoutResId(){
+    protected int getLayoutResId() {
         return R.layout.activity_fragment;
     }
 

@@ -2,7 +2,7 @@ package com.mdgd.commons.ui.main.fr.quackes
 
 import com.mdgd.commons.contract.fragment.FragmentContract
 import com.mdgd.commons.dto.Quake
-import com.mdgd.commons.dto.SearchDTO
+import com.mdgd.commons.dto.SearchParams
 import java.util.*
 
 /**
@@ -19,7 +19,7 @@ class QuakesFragmentContract {
     interface IHost : FragmentContract.IHost
 
     interface IPresenter : FragmentContract.IPresenter {
-        fun getEarthQuakes(searchParams: SearchDTO?)
+        fun searchQuakes(searchParams: SearchParams?)
 
         fun checkNewEarthQuakes()
 

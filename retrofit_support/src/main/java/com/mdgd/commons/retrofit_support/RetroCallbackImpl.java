@@ -18,6 +18,11 @@ public class RetroCallbackImpl<T, X> implements Callback<T> {
     private final ITransformer<T, X> transform;
     private final ICallback<X> callback;
 
+    public RetroCallbackImpl(ICallback<X> callback) {
+        this.callback = callback;
+        this.transform = null;
+    }
+
     public RetroCallbackImpl(ICallback<X> callback, ITransformer<T, X> transform) {
         this.transform = transform;
         this.callback = callback;
@@ -25,12 +30,14 @@ public class RetroCallbackImpl<T, X> implements Callback<T> {
 
     @Override
     public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+        if (callback == null) return;
         if (response.isSuccessful()) callback.onResult(new Result<>(transform(response.body())));
-        else callback.onResult(new Result<X>(new Exception("" + response.code() + " " + response.message())));
+        else
+            callback.onResult(new Result<X>(new Exception("" + response.code() + " " + response.message())));
     }
 
     private X transform(T body) {
-        return transform == null ? (X)body : transform.transform(body);
+        return transform == null ? (X) body : transform.transform(body);
     }
 
     @Override

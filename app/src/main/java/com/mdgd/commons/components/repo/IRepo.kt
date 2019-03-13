@@ -1,9 +1,9 @@
 package com.mdgd.commons.components.repo
 
+import com.mdgd.commons.components.repo.prefs.IPrefs
 import com.mdgd.commons.dto.Quake
-import com.mdgd.commons.dto.SearchDTO
+import com.mdgd.commons.dto.SearchParams
 import com.mdgd.commons.result.ICallback
-import java.util.*
 
 /**
  * Created by Max
@@ -12,11 +12,11 @@ import java.util.*
 
 interface IRepo {
 
-    fun getEarthquakesBeforeDate(end: Date, callback: ICallback<List<Quake>>)
+    fun getPrefs(): IPrefs
 
-    fun checkNewEarthquakes(callback: ICallback<List<Quake>>)
+    fun getEarthquakesBeforeDate(params: SearchParams, callback: ICallback<List<Quake>>)
 
-    fun getAllQuakes(searchParams: SearchDTO?): List<Quake>
+    fun searchQuakes(params: SearchParams, callback: ICallback<List<Quake>>)
 
     fun save(quakes: List<Quake>)
 }

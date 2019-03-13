@@ -31,19 +31,19 @@ public class PermissionsUtil {
             public void exec(final String permission) {
                 ActivityCompat.requestPermissions(ctx, new String[]{permission}, requestCode);
             }
-        } , permissions);
+        }, permissions);
     }
 
     @TargetApi(16)
     private static boolean checkPermissionAndExec(final Context ctx, final IPermissionCmd cmd, final String... permissions) {
-        if(ctx == null || permissions == null){
+        if (ctx == null || permissions == null) {
             return false;
         }
         boolean result = true;
         for (String p : permissions) {
             if (ctx.checkPermission(p, Process.myPid(), Process.myUid()) != PackageManager.PERMISSION_GRANTED) {
                 result = false;
-                if(cmd != null){
+                if (cmd != null) {
                     cmd.exec(p);
                 }
             }

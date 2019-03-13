@@ -16,7 +16,7 @@ public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresente
 
     protected SwipeRefreshLayout swipe;
 
-    public SwipeRecyclerFragment(){
+    public SwipeRecyclerFragment() {
         super();
         setHasProgress(true);
     }
@@ -38,7 +38,7 @@ public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresente
         return new IProgressView() {
             @Override
             public void show() {
-                if(swipe != null) swipe.setRefreshing(true);
+                if (swipe != null) swipe.setRefreshing(true);
             }
 
             @Override
@@ -48,16 +48,17 @@ public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresente
 
             @Override
             public void dismiss() {
-                if(swipe != null) swipe.setRefreshing(false);
+                if (swipe != null) swipe.setRefreshing(false);
             }
 
             @Override
             public void cancel() {
-                if(swipe != null) swipe.setRefreshing(false);
+                if (swipe != null) swipe.setRefreshing(false);
             }
         };
     }
 
     @Override
-    public void onRefresh(){}
+    public void onRefresh() {
+    }
 }

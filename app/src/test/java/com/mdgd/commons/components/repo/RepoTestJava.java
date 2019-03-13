@@ -6,7 +6,7 @@ import com.mdgd.commons.components.repo.db.IDataBase;
 import com.mdgd.commons.components.repo.network.INetwork;
 import com.mdgd.commons.components.repo.prefs.IPrefs;
 import com.mdgd.commons.dto.Quake;
-import com.mdgd.commons.dto.SearchDTO;
+import com.mdgd.commons.dto.SearchParams;
 import com.mdgd.commons.result.ICallback;
 import com.mdgd.commons.result.Result;
 
@@ -28,9 +28,12 @@ public class RepoTestJava {
 
     private static final Long MOCK_TIME = System.currentTimeMillis() - 5 * 3600_000;
 
-    @Mock private INetwork network;
-    @Mock private IDataBase db;
-    @Mock private IPrefs prefs;
+    @Mock
+    private INetwork network;
+    @Mock
+    private IDataBase db;
+    @Mock
+    private IPrefs prefs;
 
     private IRepo repo;
 
@@ -46,7 +49,7 @@ public class RepoTestJava {
     }
 
 
-//  ------------------------------------------------------------------------------------------------
+    //  ------------------------------------------------------------------------------------------------
     @Test
     public void getEarthquakes_error_emptyDb() {
         final Date end = new Date(MOCK_TIME);
@@ -70,7 +73,7 @@ public class RepoTestJava {
     public void getEarthquakes_error_dbNotEnough() {
         final Date end = new Date(MOCK_TIME);
         final List<Quake> quakes = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             quakes.add(new Quake());
         }
         Mockito.when(db.getQuakesBulk(ArgumentCaptor.forClass(Long.class).capture())).thenReturn(quakes);
@@ -114,9 +117,7 @@ public class RepoTestJava {
     }
 
 
-
-
-//  ------------------------------------------------------------------------------------------------
+    //  ------------------------------------------------------------------------------------------------
     @Test
     public void checkNewEarthquakes_fail_emptyDb() {
         Mockito.when(prefs.getLastUpdateDate()).thenReturn(MOCK_TIME);
@@ -154,7 +155,7 @@ public class RepoTestJava {
     public void checkNewEarthquakes_fail_inDbNotEnough() {
         final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
         final List<Quake> quakes = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             quakes.add(new Quake());
         }
         Mockito.when(db.getQuakesBulk(timeCaptor.capture())).thenReturn(quakes);
@@ -241,7 +242,7 @@ public class RepoTestJava {
     public void checkNewEarthquakes_successEmpty_inDbNotEnough() {
         final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
         final List<Quake> quakes = new ArrayList<>();
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             final Quake quake = new Quake();
             quake.setDate(new Date(System.currentTimeMillis() - i * 3600_000));
             quakes.add(quake);
@@ -296,7 +297,7 @@ public class RepoTestJava {
     public void checkNewEarthquakes_successEmpty_inDbEnough() {
         final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
         final List<Quake> quakes = new ArrayList<>();
-        for(int i = 0; i < Constants.PAGE_SIZE; i++) {
+        for (int i = 0; i < Constants.PAGE_SIZE; i++) {
             final Quake quake = new Quake();
             quake.setDate(new Date(System.currentTimeMillis() - i * 3600_000));
             quakes.add(quake);
@@ -343,10 +344,10 @@ public class RepoTestJava {
         final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
         final List<Quake> quakes = new ArrayList<>();
         final List<Quake> response = new ArrayList<>();
-        for(int i = 0; i < Constants.PAGE_SIZE; i++) {
+        for (int i = 0; i < Constants.PAGE_SIZE; i++) {
             final Quake quake = new Quake();
             quake.setDate(new Date(System.currentTimeMillis() - i * 3600_000));
-            if(i < Constants.PAGE_SIZE/2) response.add(quake);
+            if (i < Constants.PAGE_SIZE / 2) response.add(quake);
             else quakes.add(quake);
         }
         Mockito.when(db.getQuakesBulk(timeCaptor.capture())).thenReturn(quakes);
@@ -391,7 +392,7 @@ public class RepoTestJava {
     public void checkNewEarthquakes_successEnough() {
         final ArgumentCaptor<Long> timeCaptor = ArgumentCaptor.forClass(Long.class);
         final List<Quake> quakes = new ArrayList<>();
-        for(int i = 0; i < Constants.PAGE_SIZE; i++) {
+        for (int i = 0; i < Constants.PAGE_SIZE; i++) {
             final Quake quake = new Quake();
             quake.setDate(new Date(System.currentTimeMillis() - i * 3600_000));
             quakes.add(quake);
@@ -424,21 +425,18 @@ public class RepoTestJava {
     }
 
 
-
-
-//  ------------------------------------------------------------------------------------------------
+    //  ------------------------------------------------------------------------------------------------
     @Test
     public void getAllQuakes() {
-        final SearchDTO params = new SearchDTO("", "", "", "", "", "", "");
+        final SearchParams params = new SearchParams("", "", "", "", "", "", "");
 
-        repo.getAllQuakes(params);
+        repo.searchQuakes(params);
 
         verifyNoInteraction();
     }
 
 
-
-//  ------------------------------------------------------------------------------------------------
+    //  ------------------------------------------------------------------------------------------------
     @Test
     public void save() {
         final List<Quake> quakes = new ArrayList<>();

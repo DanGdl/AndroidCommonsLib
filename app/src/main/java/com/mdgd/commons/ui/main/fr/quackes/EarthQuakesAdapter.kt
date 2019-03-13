@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil
 import android.view.View
 import android.view.ViewGroup
 import com.mdgd.commons.R
-import com.mdgd.commons.databinding.QuakeDetailsBinding
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.recycler.CommonRecyclerAdapter
 import com.mdgd.commons.recycler.CommonViewHolder
@@ -18,7 +17,7 @@ import java.util.*
  */
 class EarthQuakesAdapter internal constructor(context: Context, listener: CommonRecyclerAdapter.IOnItemClickListener<Quake>) : CommonRecyclerAdapter<Quake>(context, listener) {
 
-    private val mSDF = SimpleDateFormat("HH:mm, yyyy.MM.dd", Locale.getDefault())
+    private val mSDF = SimpleDateFormat("HH:mm, dd.MM.yyyy", Locale.getDefault())
 
     val lastDate: Date
         get() = if (items.isEmpty()) Date()

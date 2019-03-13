@@ -12,12 +12,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    lintOptions{
+    lintOptions {
         disable 'GoogleAppIndexingWarning'
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -73,6 +73,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.22.0'
 
 
+    implementation project(':bus')
     implementation project(':capture')
     implementation project(':commons-support-v7')
     implementation project(':contract')
@@ -86,7 +87,7 @@ dependencies {
     implementation project(':sqlite')
     implementation project(':tasks')
     implementation project(':utilities')
-    implementation project('::result')
+    implementation project(':result')
     implementation project(':retrofit_support')
 }
 

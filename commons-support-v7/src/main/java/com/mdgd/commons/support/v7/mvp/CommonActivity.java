@@ -25,6 +25,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     private boolean hasProgress = true;
     protected final T presenter;
     private IProgressView progress;
+    private boolean saveInstanceStateCalled = false;
 
     public CommonActivity() {
         presenter = getPresenter();
@@ -35,10 +36,29 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        saveInstanceStateCalled = false;
+
         setContentView(getLayoutResId());
     }
 
     protected abstract int getLayoutResId();
+
+    protected int getFragmentContainerId() {
+        return R.id.fragmentContainer;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveInstanceStateCalled = true;
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        saveInstanceStateCalled = false;
+    }
 
     @Override
     protected void onResume() {
@@ -119,6 +139,9 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         Toast.makeText(this, getString(msgRes, query), Toast.LENGTH_SHORT).show();
     }
 
+
+
+
     @Deprecated
     protected void setFragment(Fragment fragment) {
         setFragment(fragment, false, null);
@@ -126,20 +149,13 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @Deprecated
     protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        if(saveInstanceStateCalled) return;
         getTransaction(addToStack, backStackTag).replace(getFragmentContainerId(), fragment).commit();
     }
 
     @Deprecated
     protected void setFragmentToBackStack(Fragment fragment) {
         setFragment(fragment, true, null);
-    }
-
-    protected void addFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        if (fragment instanceof DialogFragment) {
-            ((DialogFragment) fragment).show(getSupportFragmentManager(), backStackTag);
-        } else {
-            getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
-        }
     }
 
     protected FragmentTransaction getTransaction(boolean addToStack, String backStackTag) {
@@ -156,8 +172,13 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         addFragment(fragment, true, null);
     }
 
-    protected void replaceFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        getTransaction(addToStack, backStackTag).replace(getFragmentContainerId(), fragment).commit();
+    protected void addFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        if(saveInstanceStateCalled) return;
+        if (fragment instanceof DialogFragment) {
+            ((DialogFragment) fragment).show(getSupportFragmentManager(), backStackTag);
+        } else {
+            getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
+        }
     }
 
     protected void replaceFragment(Fragment fragment) {
@@ -168,15 +189,17 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         replaceFragment(fragment, true, null);
     }
 
+    protected void replaceFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        if(saveInstanceStateCalled) return;
+        getTransaction(addToStack, backStackTag).replace(getFragmentContainerId(), fragment).commit();
+    }
+
     protected void removeFragment(Fragment fragment, boolean addToStack, String backStackTag) {
+        if(saveInstanceStateCalled) return;
         getTransaction(addToStack, backStackTag).remove(fragment).commit();
     }
 
     protected void removeFragment(Fragment fragment) {
         removeFragment(fragment, false, null);
-    }
-
-    protected int getFragmentContainerId() {
-        return R.id.fragmentContainer;
     }
 }

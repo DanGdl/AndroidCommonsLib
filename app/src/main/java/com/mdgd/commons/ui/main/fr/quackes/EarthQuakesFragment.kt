@@ -16,6 +16,7 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import com.mdgd.commons.R
 import com.mdgd.commons.components.Injection
+import com.mdgd.commons.databinding.FragmentRecyclerBinding
 import com.mdgd.commons.dto.Quake
 import com.mdgd.commons.recycler.CommonRecyclerAdapter
 import com.mdgd.commons.support.v7.fragment.recycler.SwipeRecyclerFragment

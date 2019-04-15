@@ -67,7 +67,7 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
         binding?.recycler?.addOnScrollListener(object : EndlessScrollListener() {
 
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                this@EarthQuakesFragment.onLoadMore(page, totalItemsCount, view)
+                binding?.recycler?.postDelayed({ this@EarthQuakesFragment.onLoadMore(page, totalItemsCount, view) }, 200L)
             }
         })
 

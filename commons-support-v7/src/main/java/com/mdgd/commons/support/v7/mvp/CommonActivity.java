@@ -70,13 +70,8 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     @Override
     protected void onPause() {
         onForeground = false;
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
         hideProgress();
-        super.onStop();
+        super.onPause();
     }
 
     @TargetApi(16)

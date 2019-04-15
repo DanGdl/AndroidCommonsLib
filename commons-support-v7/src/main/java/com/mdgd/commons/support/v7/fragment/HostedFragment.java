@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.mdgd.commons.contract.fragment.FragmentContract;
 import com.mdgd.commons.contract.progress.IProgressView;
-import com.mdgd.commons.contract.progress.ProgressDialogWrapper;
+import com.mdgd.commons.support.v7.progress.ProgressDialogWrapper;
 import com.mdgd.commons.utilities.PermissionsUtil;
 
 /**
@@ -93,10 +93,10 @@ public abstract class HostedFragment<X extends FragmentContract.IPresenter, Y ex
     @Override
     @CallSuper
     public void hideProgress() {
-        if (progress != null && progress.isShowing() && host != null && !host.isFinishing()) {
-            progress.dismiss();
-            progress = null;
-        }
+        if (progress == null) return;
+        progress.dismiss();
+        progress = null;
+
     }
 
     @Override

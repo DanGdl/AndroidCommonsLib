@@ -11,6 +11,4 @@ public interface IProgressView {
     boolean isShowing();
 
     void dismiss();
-
-    void cancel();
 }

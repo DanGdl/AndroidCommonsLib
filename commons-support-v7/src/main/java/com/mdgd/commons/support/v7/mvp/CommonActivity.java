@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 import com.mdgd.commons.contract.mvp.ViewContract;
 import com.mdgd.commons.contract.progress.IProgressView;
-import com.mdgd.commons.contract.progress.ProgressDialogWrapper;
 import com.mdgd.commons.support.v7.R;
+import com.mdgd.commons.support.v7.progress.ProgressDialogWrapper;
 import com.mdgd.commons.utilities.PermissionsUtil;
 
 /**
@@ -21,6 +21,7 @@ import com.mdgd.commons.utilities.PermissionsUtil;
 
 public abstract class CommonActivity<T extends ViewContract.IPresenter> extends AppCompatActivity
         implements ViewContract.IView {
+    @Deprecated
     protected boolean onForeground = false;
     private boolean hasProgress = true;
     protected final T presenter;
@@ -111,7 +112,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     public void showProgress(String title, String message) {
         try {
             if (progress == null) progress = createProgressView(title, message);
-            if (onForeground && !progress.isShowing() && !isFinishing()) progress.show();
+            if (!progress.isShowing() && !isFinishing()) progress.show();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -123,7 +124,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @Override
     public void hideProgress() {
-        if (progress != null && progress.isShowing() && !isFinishing()) {
+        if (progress != null) {
             progress.dismiss();
             progress = null;
         }
@@ -176,9 +177,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
         if(saveInstanceStateCalled) return;
         if (fragment instanceof DialogFragment) {
             ((DialogFragment) fragment).show(getSupportFragmentManager(), backStackTag);
-        } else {
-            getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
-        }
+        } else getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
     }
 
     protected void replaceFragment(Fragment fragment) {

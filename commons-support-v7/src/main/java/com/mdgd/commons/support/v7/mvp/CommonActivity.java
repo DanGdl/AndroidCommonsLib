@@ -38,7 +38,6 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         saveInstanceStateCalled = false;
-
         setContentView(getLayoutResId());
     }
 
@@ -124,10 +123,9 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @Override
     public void hideProgress() {
-        if (progress != null) {
-            progress.dismiss();
-            progress = null;
-        }
+        if (progress == null) return;
+        progress.dismiss();
+        progress = null;
     }
 
     @Override
@@ -141,8 +139,6 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
 
-
-
     @Deprecated
     protected void setFragment(Fragment fragment) {
         setFragment(fragment, false, null);
@@ -150,7 +146,7 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
 
     @Deprecated
     protected void setFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        if(saveInstanceStateCalled) return;
+        if (saveInstanceStateCalled) return;
         getTransaction(addToStack, backStackTag).replace(getFragmentContainerId(), fragment).commit();
     }
 
@@ -174,10 +170,11 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     protected void addFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        if(saveInstanceStateCalled) return;
+        if (saveInstanceStateCalled) return;
         if (fragment instanceof DialogFragment) {
             ((DialogFragment) fragment).show(getSupportFragmentManager(), backStackTag);
-        } else getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
+        } else
+            getTransaction(addToStack, backStackTag).add(getFragmentContainerId(), fragment).commit();
     }
 
     protected void replaceFragment(Fragment fragment) {
@@ -189,12 +186,12 @@ public abstract class CommonActivity<T extends ViewContract.IPresenter> extends 
     }
 
     protected void replaceFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        if(saveInstanceStateCalled) return;
+        if (saveInstanceStateCalled) return;
         getTransaction(addToStack, backStackTag).replace(getFragmentContainerId(), fragment).commit();
     }
 
     protected void removeFragment(Fragment fragment, boolean addToStack, String backStackTag) {
-        if(saveInstanceStateCalled) return;
+        if (saveInstanceStateCalled) return;
         getTransaction(addToStack, backStackTag).remove(fragment).commit();
     }
 

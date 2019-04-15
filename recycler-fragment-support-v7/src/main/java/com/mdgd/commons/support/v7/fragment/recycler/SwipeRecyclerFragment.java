@@ -50,11 +50,6 @@ public abstract class SwipeRecyclerFragment<X extends FragmentContract.IPresente
             public void dismiss() {
                 if (swipe != null) swipe.setRefreshing(false);
             }
-
-            @Override
-            public void cancel() {
-                if (swipe != null) swipe.setRefreshing(false);
-            }
         };
     }
 

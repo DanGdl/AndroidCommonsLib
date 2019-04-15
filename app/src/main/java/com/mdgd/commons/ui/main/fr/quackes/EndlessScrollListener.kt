@@ -35,41 +35,38 @@ abstract class EndlessScrollListener : RecyclerView.OnScrollListener {
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        //only trigger action if scrolling down
-        if (if (!reverseDirection) dy > 0 else dy < 0) {
-            val lm = recyclerView.layoutManager
-            if (lm != null) {
-                val totalItemCount = lm.itemCount
-                val lastVisibleItemPosition = (lm as LinearLayoutManager).findLastVisibleItemPosition()
+        // only trigger action if scrolling down or if there is no enough items to fill screen
+        val isTrigger = if (reverseDirection) dy <= 0 else dy >= 0
+        if (!isTrigger) return
+        val lm = recyclerView.layoutManager
+        lm ?: return
+        val totalItemCount = lm.itemCount
+        val lastVisibleItemPosition = (lm as LinearLayoutManager).findLastVisibleItemPosition()
 
-                // If the total item count is zero and the previous isn't, assume the
-                // list is invalidated and should be reset back to initial state
-                if (totalItemCount < previousTotalItemCount) {
-                    this.currentPage = this.startingPageIndex
-                    this.previousTotalItemCount = totalItemCount
-                    if (totalItemCount == 0) {
-                        this.loading = true
-                    }
-                }
+        // If the total item count is zero and the previous isn't, assume the
+        // list is invalidated and should be reset back to initial state
+        if (totalItemCount < previousTotalItemCount) {
+            this.currentPage = this.startingPageIndex
+            this.previousTotalItemCount = totalItemCount
+            if (totalItemCount == 0) this.loading = true
+        }
 
-                // If it’s still loading, we check to see if the dataset count has
-                // changed, if so we conclude it has finished loading and update the current page
-                // number and total item count.
-                if (loading && totalItemCount > previousTotalItemCount) {
-                    loading = false
-                    previousTotalItemCount = totalItemCount
-                }
+        // If it’s still loading, we check to see if the dataset count has
+        // changed, if so we conclude it has finished loading and update the current page
+        // number and total item count.
+        if (loading && totalItemCount > previousTotalItemCount) {
+            loading = false
+            previousTotalItemCount = totalItemCount
+        }
 
-                // If it isn’t currently loading, we check to see if we have breached
-                // the visibleThreshold and need to reload more data.
-                // If we do need to reload some more data, we execute onLoadMore to fetch the data.
-                // threshold should reflect how many total columns there are too
-                if (!loading && lastVisibleItemPosition + visibleThreshold > totalItemCount) {
-                    currentPage++
-                    onLoadMore(currentPage, totalItemCount, recyclerView)
-                    loading = true
-                }
-            }
+        // If it isn’t currently loading, we check to see if we have breached
+        // the visibleThreshold and need to reload more data.
+        // If we do need to reload some more data, we execute onLoadMore to fetch the data.
+        // threshold should reflect how many total columns there are too
+        if (!loading && lastVisibleItemPosition + visibleThreshold > totalItemCount) {
+            currentPage++
+            onLoadMore(currentPage, totalItemCount, recyclerView)
+            loading = true
         }
     }
 

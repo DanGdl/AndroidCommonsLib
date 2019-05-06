@@ -25,4 +25,12 @@ class SplashActivity : HostActivity<SplashScreenContract.IPresenter>(), SplashSc
     private fun proceedFromSplash() {
         replaceFragment(EarthQuakesFragment.newInstance())
     }
+
+    override fun onRetainCustomNonConfigurationInstance(): Any {
+        return super.onRetainCustomNonConfigurationInstance()
+    }
+
+    override fun getLastNonConfigurationInstance(): Any? {
+        return super.getLastNonConfigurationInstance()
+    }
 }

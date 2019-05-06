@@ -14,6 +14,7 @@ class QuakesFragmentContract {
 
     interface IView : FragmentContract.IView {
         fun updateEarthQuakes(quakes: List<Quake>)
+        fun decreasePage()
     }
 
     interface IHost : FragmentContract.IHost

@@ -30,6 +30,7 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
         QuakesFragmentContract.IView, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private var binding: FragmentRecyclerBinding? = null
+    private var listener: EndlessScrollListener? = null
     private var currentPage: Int = 0
 
     companion object {
@@ -64,12 +65,13 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
         super.onActivityCreated(savedInstanceState)
         binding?.swipeRefresh?.setColorSchemeColors(Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN)
         binding?.recycler?.layoutManager = LinearLayoutManager(activity)
-        binding?.recycler?.addOnScrollListener(object : EndlessScrollListener() {
 
+        listener = object : EndlessScrollListener() {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                binding?.recycler?.postDelayed({ this@EarthQuakesFragment.onLoadMore(page, totalItemsCount, view) }, 200L)
+                binding?.recycler?.postDelayed({ this@EarthQuakesFragment.onLoadMore() }, 200L)
             }
-        })
+        }
+        binding?.recycler?.addOnScrollListener(listener as EndlessScrollListener)
 
         binding?.toolbarInc?.searchBtn?.setOnClickListener(this)
         binding?.toolbarInc?.extensionToggle?.setOnCheckedChangeListener(this)
@@ -85,20 +87,26 @@ class EarthQuakesFragment : SwipeRecyclerFragment<QuakesFragmentContract.IPresen
         onRefresh()
     }
 
-    fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+    fun onLoadMore() {
         currentPage++
         presenter?.getNextBulk((adapter as EarthQuakesAdapter).lastDate)
-    }
-
-    override fun updateEarthQuakes(quakes: List<Quake>) {
-        binding?.toolbarInc?.toolbarIcon?.requestFocus()
-        if (currentPage == 0) adapter?.setItems(quakes)
-        else adapter?.addItems(quakes)
     }
 
     override fun onRefresh() {
         currentPage = 0
         presenter.checkNewEarthQuakes()
+    }
+
+    override fun updateEarthQuakes(quakes: List<Quake>) {
+        binding?.toolbarInc?.toolbarIcon?.requestFocus()
+        if (currentPage == 0) {
+            listener?.resetState()
+            adapter?.setItems(quakes)
+        } else adapter?.addItems(quakes)
+    }
+
+    override fun decreasePage() {
+        currentPage -= 1
     }
 
     override fun onItemClicked(item: Quake, position: Int) {

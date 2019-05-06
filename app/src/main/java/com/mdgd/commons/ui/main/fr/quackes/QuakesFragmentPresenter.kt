@@ -18,8 +18,10 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
         view.showProgress(R.string.empty, R.string.wait_please)
         repo.searchQuakes(searchParams, ICallback {
             view.hideProgress()
-            if (it.isFail) view.showToast(R.string.shit, it.error?.message)
-            else view.updateEarthQuakes(it.data!!)
+            if (it.isFail) {
+                view.showToast(R.string.shit, it.error?.message)
+                view.decreasePage()
+            } else view.updateEarthQuakes(it.data!!)
         })
     }
 
@@ -27,8 +29,10 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
         view.showProgress(R.string.empty, R.string.wait_please)
         repo.searchQuakes(SearchParams("", repo.getPrefs().lastUpdateDate), ICallback {
             view.hideProgress()
-            if (it.isFail) view.showToast(R.string.shit, it.error?.message)
-            else view.updateEarthQuakes(it.data!!)
+            if (it.isFail) {
+                view.showToast(R.string.shit, it.error?.message)
+                view.decreasePage()
+            } else view.updateEarthQuakes(it.data!!)
         })
     }
 
@@ -36,8 +40,10 @@ class QuakesFragmentPresenter(view: QuakesFragmentContract.IView, private val re
         view.showProgress(R.string.empty, R.string.wait_please)
         repo.getEarthquakesBeforeDate(SearchParams("", SearchParams.DEF_TIME, "", lastDate.time), ICallback {
             view.hideProgress()
-            if (it.isFail) view.showToast(R.string.shit, it.error?.message)
-            else view.updateEarthQuakes(it.data!!)
+            if (it.isFail) {
+                view.showToast(R.string.shit, it.error?.message)
+                view.decreasePage()
+            } else view.updateEarthQuakes(it.data!!)
         })
         // view.showProgress(R.string.empty, R.string.wait_please)
         // repo.getEarthquakesBeforeDate(SearchParams("", lastDate.time), ICallback {

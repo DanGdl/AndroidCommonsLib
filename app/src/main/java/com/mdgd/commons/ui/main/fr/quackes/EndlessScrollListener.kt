@@ -36,7 +36,12 @@ abstract class EndlessScrollListener : RecyclerView.OnScrollListener {
         super.onScrolled(recyclerView, dx, dy)
 
         // only trigger action if scrolling down or if there is no enough items to fill screen
-        val isTrigger = if (reverseDirection) dy <= 0 else dy >= 0
+        val isTrigger = if (currentPage == 0) {
+            if (reverseDirection) dy <= 0 else dy >= 0
+        } else {
+            if (reverseDirection) dy < 0 else dy > 0
+        }
+
         if (!isTrigger) return
         val lm = recyclerView.layoutManager
         lm ?: return
@@ -55,8 +60,8 @@ abstract class EndlessScrollListener : RecyclerView.OnScrollListener {
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
         if (loading && totalItemCount > previousTotalItemCount) {
-            loading = false
             previousTotalItemCount = totalItemCount
+            loading = false
         }
 
         // If it isn’t currently loading, we check to see if we have breached
@@ -72,8 +77,8 @@ abstract class EndlessScrollListener : RecyclerView.OnScrollListener {
 
     // Call this method whenever performing new searches
     fun resetState() {
-        this.currentPage = this.startingPageIndex
         this.previousTotalItemCount = 0
+        this.currentPage = 0
         this.loading = true
     }
 

@@ -53,14 +53,14 @@ dependencies {
     // json
     implementation 'com.google.code.gson:gson:2.8.2'
 
-    //retrofit
+    // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_ver"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_ver"
     implementation "com.squareup.retrofit2:adapter-rxjava:$retrofit_ver"
 
     // okHttp
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
